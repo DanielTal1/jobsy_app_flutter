@@ -1,17 +1,17 @@
 List<Map> stagesList=[
   {
     'id':'0',
-    'name':'Applied',
+    'name':'applied',
     'image':'images/apply.png'
   },
   {
     'id':'6',
-    'name':'Hr interview',
+    'name':'hr interview',
     'image':'images/hr.png'
   },
   {
     'id':'1',
-    'name':'1th interview',
+    'name':'1st interview',
     'image':'images/first_interview.png'
   },
   {

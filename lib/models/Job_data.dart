@@ -35,6 +35,17 @@ class JobData extends ChangeNotifier{
     notifyListeners();
   }
 
+  void deleteJob(Job deleted_job){
+    jobsList.removeWhere((job) => job.company == deleted_job.company &&
+        job.role == deleted_job.role && job.location == deleted_job.location &&
+        job.interview_stage == deleted_job.interview_stage);
+    currentQuery!=''&& jobCheck(currentQuery,deleted_job)?
+    JobsResult.removeWhere((job) => job.company == deleted_job.company &&
+        job.role == deleted_job.role && job.location == deleted_job.location &&
+        job.interview_stage == deleted_job.interview_stage):null;
+    notifyListeners();
+  }
+
 
   void updateStage(Job new_job,String new_stage){
     new_job.changeStage(new_stage);

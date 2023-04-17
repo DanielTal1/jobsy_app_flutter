@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'models/Job_data.dart';
 import 'models/job.dart';
 import 'models/stage.dart';
 
@@ -23,6 +25,11 @@ class _JobPageState extends State<JobPage> {
             title:Text('Jobsy'),
             backgroundColor:const Color(0xFF126180),
             actions: [
+              IconButton(onPressed:(){
+                Provider.of<JobData>(context, listen: false).deleteJob(currentJob);
+                Navigator.pop(context);
+              },
+              icon:Icon(Icons.delete)),
               IconButton(onPressed: (){},
                   icon:Icon(Icons.more_vert))
             ]
