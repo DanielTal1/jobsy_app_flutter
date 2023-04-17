@@ -20,6 +20,7 @@ class _SearchJobsState extends State<SearchJobs> {
           child:
             TextField(
                 style: TextStyle(color: Colors.white),
+                autofocus:true,
               controller:_searchController ,
               decoration: InputDecoration(
                 prefixIcon: IconButton(icon:Icon(Icons.arrow_back),onPressed:(){

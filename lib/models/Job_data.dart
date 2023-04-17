@@ -71,4 +71,8 @@ class JobData extends ChangeNotifier{
     currentQuery='';
     JobsResult=jobsList;
   }
+
+  int getCount(){
+    return JobsResult.length;
+  }
 }

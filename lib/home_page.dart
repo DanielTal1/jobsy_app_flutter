@@ -12,15 +12,16 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   static const String id='Home_page';
 
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   bool showSearch = false;
+  int jobCount=0;
   @override
   Widget build(BuildContext context) {
+    jobCount=Provider.of<JobData>(context).getCount();
     return Scaffold(resizeToAvoidBottomInset : false,
         backgroundColor: Color(0xFFF9F5EB),
         appBar: AppBar(
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
           title:Text('Jobsy'),
           backgroundColor:const Color(0xFF126180),
           actions: [
+            Text('count: $jobCount',style:TextStyle(fontSize: 15)),
             IconButton(onPressed: (){},
                 icon:Icon(Icons.more_vert))
           ],
@@ -56,34 +58,33 @@ class _HomePageState extends State<HomePage> {
               })
           )
         ),
-          body:showSearch?JobList("Search"):JobList("All"),
-            floatingActionButton:FloatingActionButton(
-                onPressed: (){
-                  showModalBottomSheet(context: context,isScrollControlled: true, builder:(context)=>
+        body:showSearch?JobList("Search"):JobList("All"),
+        floatingActionButton:FloatingActionButton(
+            onPressed: (){
+              showModalBottomSheet(context: context,isScrollControlled: true, builder:(context)=>
                   SingleChildScrollView(
                       child: GestureDetector(
-                      child:Padding(
-                      padding:EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom
-                  ),child: Container(decoration: BoxDecoration(
-                      color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          topRight: Radius.circular(20.0),
-                        )
-                      ),
-                      child:AddJobScreen()
-                      )
-                      )
+                          child:Padding(
+                              padding:EdgeInsets.only(
+                                  bottom: MediaQuery.of(context).viewInsets.bottom
+                              ),child: Container(decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20.0),
+                                topRight: Radius.circular(20.0),
+                              )
+                          ),
+                              child:AddJobScreen()
+                          )
+                          )
                       )
                   )
-                  );
-                },
-                child: Icon(Icons.add),
-              backgroundColor:  Color(0xFF126180)
-            ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
-
+              );
+            },
+            child: Icon(Icons.add),
+            backgroundColor:  Color(0xFF126180)
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
           );
   }
 }
