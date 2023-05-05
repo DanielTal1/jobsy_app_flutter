@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'login.dart';
 class SignUpPage extends StatefulWidget {
   static const String id='sign_up_page';
   const SignUpPage({super.key});
@@ -13,7 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
+  String loginError="";
   @override
   void dispose() {
     _usernameController.dispose();
@@ -21,6 +25,27 @@ class _SignUpPageState extends State<SignUpPage> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
+
+  Future<bool> checkRegister() async {
+    http.Response response=await http.post(
+      Uri.parse('http://10.0.2.2:3000/auth/register'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': _usernameController.text,
+        'password': _passwordController.text
+      }),
+    );
+    var message= jsonDecode(response.body)['message'];
+    if(message=="User as been added successfully"){
+      return true;
+    }
+    return false;
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 },
               ),
               SizedBox(height: 40.0),
+              Text(loginError),
               Container(
                 height: 50,
                 width: double.infinity,
@@ -106,9 +132,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   borderRadius: BorderRadius.circular(30.0),
                   elevation: 5.0,
                   child: MaterialButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      loginError="";
                       if (_formKey.currentState!.validate()) {
-                        //TODO: Implement sign-up logic
+                        if(await checkRegister()){
+                          Navigator.pushNamed(context, Login.id);
+                        }
+                        else{
+                          setState(() {
+                            loginError="Invalid username or password";
+                          });
+                        }
                       }
                     },
                     minWidth: 200.0,

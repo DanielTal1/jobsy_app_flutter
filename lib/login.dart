@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
-
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -14,6 +16,33 @@ class _Login extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  String loginError="";
+
+  Future<bool> checkLogin() async {
+    http.Response response=await http.post(
+      Uri.parse('http://10.0.2.2:3000/auth/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': _usernameController.text,
+        'password': _passwordController.text
+      }),
+    );
+    var message= jsonDecode(response.body)['message'];
+    if(message=="logged in successfully"){
+      return true;
+    }
+    return false;
+  }
+
+
+
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
 
   @override
@@ -54,9 +83,6 @@ class _Login extends State<Login> {
                   }
                   return null;
                 },
-                  onSaved: (String? value){
-
-                  },
               ),
               SizedBox(height: 20.0),
               TextFormField(
@@ -74,9 +100,7 @@ class _Login extends State<Login> {
                 },
               ),
               SizedBox(height: 40.0),
-
-
-
+              Text(loginError),
               Container(
                 height: 50,
                 width: double.infinity,
@@ -87,9 +111,17 @@ class _Login extends State<Login> {
                   color: Color(0xFF0093AF),
                   borderRadius: BorderRadius.circular(30.0),
                   child: MaterialButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      loginError="";
                       if (_formKey.currentState!.validate()) {
-                        Navigator.pushNamed(context, HomePage.id);
+                        if(await checkLogin()){
+                          Navigator.pushNamed(context, HomePage.id);
+                        }
+                        else{
+                          setState(() {
+                            loginError="Invalid username or password";
+                          });
+                        }
                       }
                     },
                     minWidth: 200.0,
