@@ -25,38 +25,38 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(resizeToAvoidBottomInset : false,
         backgroundColor: Color(0xFFF9F5EB),
         appBar: AppBar(
-          leading: IconButton(onPressed: (){},
-              icon:Icon(Icons.menu)),
-          title:Text('Jobsy'),
-          backgroundColor:const Color(0xFF126180),
-          actions: [
-            Text('count: $jobCount',style:TextStyle(fontSize: 15)),
-            IconButton(onPressed: (){},
-                icon:Icon(Icons.more_vert))
-          ],
+            leading: IconButton(onPressed: (){},
+                icon:Icon(Icons.menu)),
+            title:Text('Jobsy'),
+            backgroundColor:const Color(0xFF126180),
+            actions: [
+              Text('count: $jobCount',style:TextStyle(fontSize: 15)),
+              IconButton(onPressed: (){},
+                  icon:Icon(Icons.more_vert))
+            ],
             bottom:PreferredSize(
-              preferredSize: Size.fromHeight(50.0),
-              child: showSearch==false? Expanded(
-                child: Row( mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                  IconButton(onPressed: (){
-                    setState(() {
-                      showSearch = true;
-                    });
-                  },
-                      icon:Icon(Icons.search,  color: Colors.white,
-                      )),
-                  IconButton(onPressed: (){},
-                      icon:Icon(Icons.filter_alt_outlined,  color: Colors.white)),
-                  IconButton(onPressed: (){},
-                      icon:Icon(Icons.sort,  color: Colors.white)),
-                ],),
-              ) : SearchJobs((){
-                setState(() {
-                  showSearch=false;
-                });
-              })
-          )
+                preferredSize: Size.fromHeight(50.0),
+                child: showSearch==false? Expanded(
+                  child: Row( mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(onPressed: (){
+                        setState(() {
+                          showSearch = true;
+                        });
+                      },
+                          icon:Icon(Icons.search,  color: Colors.white,
+                          )),
+                      IconButton(onPressed: (){},
+                          icon:Icon(Icons.filter_alt_outlined,  color: Colors.white)),
+                      IconButton(onPressed: (){},
+                          icon:Icon(Icons.sort,  color: Colors.white)),
+                    ],),
+                ) : SearchJobs((){
+                  setState(() {
+                    showSearch=false;
+                  });
+                })
+            )
         ),
         body:showSearch?JobList("Search"):JobList("All"),
         floatingActionButton:FloatingActionButton(
@@ -85,8 +85,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor:  Color(0xFF126180)
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
-          );
+    );
   }
 }
-
 

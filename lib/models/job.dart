@@ -1,14 +1,14 @@
 
 class Job{
-  String? id;
+  final String id;
   final String company;
   final String role;
   final String location;
   String? url;
   String interview_stage;
   String? lastUpdated;
-  String? company_photo;
-  bool? archive;
+  String company_logo;
+  // bool? archive;
 
   factory Job.fromJson(Map<String,dynamic> parsedJson){
     return Job(
@@ -19,16 +19,30 @@ class Job{
         url:parsedJson['url'].toString(),
         interview_stage:parsedJson['stage'],
         lastUpdated:parsedJson['updatedAt'],
-        company_photo:parsedJson['company_photo'],
-        archive:parsedJson['archive']
+        company_logo:parsedJson['company_logo'],
+        // archive:parsedJson['archive']
     );
+  }
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'company': company,
+      'role': role,
+      'location': location,
+      'url': url,
+      'stage': interview_stage,
+      'updatedAt': lastUpdated,
+      'company_logo': company_logo,
+    };
   }
 
 
 
 
 
-  Job({this.id,required this.company, required this.role, required this.location,this.lastUpdated,required this.interview_stage,this.url,this.company_photo,  this.archive});
+  Job({required this.id,required this.company, required this.role, required this.location, this.lastUpdated,required this.interview_stage, this.url,required this.company_logo});
 
   void changeStage(String new_stage ){
     this.interview_stage=new_stage;

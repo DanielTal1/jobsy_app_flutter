@@ -5,7 +5,6 @@ import 'package:jobsy_app_flutter/models/job.dart';
 
 
 class JobTile extends StatelessWidget {
-
   final Job currentJob;
   JobTile({required this.currentJob});
   @override
@@ -14,14 +13,14 @@ class JobTile extends StatelessWidget {
       title:Text(currentJob.role),
       trailing:Container(child:Row(children: [
         Column(children: [
-          Text("25/03/2022"),
+          // Text(currentJob.lastUpdated),
           Text(currentJob.interview_stage)]
       ),
       ]),width:130.0),
       subtitle: Text(currentJob.company+" , "+currentJob.location),
       leading:ClipRRect(
         borderRadius: BorderRadius.circular(8), // Image border
-        child: Image.network('https://logo.clearbit.com/amazon.com', fit: BoxFit.cover,height: 40.0),
+        child: currentJob.company_logo==""?Image.asset('images/company.png',fit: BoxFit.cover,height: 50.0):Image.network(currentJob.company_logo, fit: BoxFit.cover,height: 50.0),
         ),
       onTap:()=> Navigator.push(context,MaterialPageRoute(builder: (context)=>
         JobPage(currentJob: currentJob)

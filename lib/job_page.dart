@@ -16,8 +16,8 @@ class JobPage extends StatefulWidget {
 
 class _JobPageState extends State<JobPage> {
   final Job currentJob;
-  late String selected_stage=currentJob.interview_stage;
   _JobPageState({required this.currentJob});
+  late String selected_stage=currentJob.interview_stage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(resizeToAvoidBottomInset : false,
@@ -26,7 +26,7 @@ class _JobPageState extends State<JobPage> {
             backgroundColor:const Color(0xFF126180),
             actions: [
               IconButton(onPressed:(){
-                Provider.of<JobData>(context, listen: false).deleteJob(currentJob);
+                // Provider.of<JobData>(context, listen: false).deleteJob(currentJob);
                 Navigator.pop(context);
               },
               icon:Icon(Icons.delete)),
@@ -46,7 +46,7 @@ class _JobPageState extends State<JobPage> {
                 padding: const EdgeInsets.all(20),
                 child: Row(children: [
                   ClipRRect(// Image border
-                      child: Image.network('https://logo.clearbit.com/amazon.com', fit: BoxFit.fill),
+                      child: currentJob.company_logo==""?Image.asset('images/company.png',fit: BoxFit.fill,height:100):Image.network(currentJob.company_logo, fit: BoxFit.fill),
                       borderRadius: BorderRadius.circular(15)
                   ),
                   SizedBox(width: 20.0),

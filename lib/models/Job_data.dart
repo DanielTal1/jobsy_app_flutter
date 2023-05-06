@@ -1,63 +1,69 @@
 
-
-import 'package:flutter/foundation.dart';
-
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'job.dart';
 
 class JobData extends ChangeNotifier{
-  List<Job> jobsList=[
-    Job(company:"amazon",role:"Backend Software Engineer-DevEx Teamssss",location:"Tel-aviv",lastUpdated:"25/3/2022",interview_stage:"applied"),
-    Job(company:"microsoft",role:"qa",location:"Tel-aviv", lastUpdated: "18/11/2023",interview_stage:"applied"),
-    Job(company:"amazon",role:"developer",location:"Tel-aviv",lastUpdated:"25/3/2022",interview_stage:"applied"),
-    Job(company:"microsoft",role:"qa",location:"Tel-aviv", lastUpdated: "18/11/2023",interview_stage:"1st interview"),
-    Job(company:"amazon",role:"developer",location:"Tel-aviv",lastUpdated:"25/3/2022",interview_stage:"Offer"),
-    Job(company:"microsoft",role:"qa",location:"Tel-aviv", lastUpdated: "18/11/2023",interview_stage:"2nd interview"),
-    Job(company:"amazon",role:"developer",location:"Tel-aviv",lastUpdated:"25/3/2022",interview_stage:"4th interview"),
-    Job(company:"microsoft",role:"qa",location:"Tel-aviv", lastUpdated: "18/11/2023",interview_stage:"applied"),
-    Job(company:"amazon",role:"developer",location:"Tel-aviv",lastUpdated:"25/3/2022",interview_stage:"applied"),
-    Job(company:"microsoft",role:"qa",location:"Tel-aviv", lastUpdated: "18/11/2023",interview_stage:"applied"),
-    Job(company:"amazon",role:"developer",location:"Tel-aviv",lastUpdated:"25/3/2022",interview_stage:"applied"),
-    Job(company:"microsoft",role:"qa",location:"Tel-aviv", lastUpdated: "18/11/2023",interview_stage:"applied"),
-    Job(company:"amazon",role:"developer",location:"Tel-aviv",lastUpdated:"25/3/2022",interview_stage:"applied"),
-    Job(company:"microsoft",role:"qa",location:"Tel-aviv", lastUpdated: "18/11/2023",interview_stage:"applied"),
-    Job(company:"amazon",role:"developer",location:"Tel-aviv",lastUpdated:"25/3/2022",interview_stage:"applied"),
-    Job(company:"microsoft",role:"qa",location:"Tel-aviv", lastUpdated: "18/11/2023",interview_stage:"applied"),
-  ];
-  late List<Job> JobsResult=jobsList;
+  List<Job> _jobs = [];
+  bool _isLoading = false;
+  List<Job> get jobs => _jobs;
+  bool get isLoading => _isLoading;
+  late List<Job> JobsResult=_jobs;
   String currentQuery='';
 
-
-
-  void updateJobLIst(){
-
+  JobData() {
+    fetchJobs();
+    JobsResult=_jobs;
   }
 
-  void addJob(Job new_job){
-    jobsList.insert(0,new_job);
-    currentQuery!=''&& jobCheck(currentQuery,new_job)? JobsResult.insert(0,new_job):null;
+  Future<void> fetchJobs() async {
+    _isLoading = true;
     notifyListeners();
+    try {
+      final response = await http.get(Uri.parse('http://10.0.2.2:3000/jobs/user/ronaldo'));
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      _jobs = jsonData.map((jobData) => Job.fromJson(jobData)).toList();
+      _isLoading = false;
+      notifyListeners();
+    } catch (error) {
+      _isLoading = false;
+      notifyListeners();
+      throw error;
+    }
   }
 
-  void deleteJob(Job deleted_job){
-    jobsList.removeWhere((job) => job.company == deleted_job.company &&
-        job.role == deleted_job.role && job.location == deleted_job.location &&
-        job.interview_stage == deleted_job.interview_stage);
-    currentQuery!=''&& jobCheck(currentQuery,deleted_job)?
-    JobsResult.removeWhere((job) => job.company == deleted_job.company &&
-        job.role == deleted_job.role && job.location == deleted_job.location &&
-        job.interview_stage == deleted_job.interview_stage):null;
-    notifyListeners();
-  }
+
+  // void updateJobLIst(){
+  //
+  // }
+
+  // void addJob(Job new_job){
+  //   jobsList.insert(0,new_job);
+  //   currentQuery!=''&& jobCheck(currentQuery,new_job)? JobsResult.insert(0,new_job):null;
+  //   notifyListeners();
+  // }
+  //
+  // void deleteJob(Job deleted_job){
+  //   jobsList.removeWhere((job) => job.company == deleted_job.company &&
+  //       job.role == deleted_job.role && job.location == deleted_job.location &&
+  //       job.interview_stage == deleted_job.interview_stage);
+  //   currentQuery!=''&& jobCheck(currentQuery,deleted_job)?
+  //   JobsResult.removeWhere((job) => job.company == deleted_job.company &&
+  //       job.role == deleted_job.role && job.location == deleted_job.location &&
+  //       job.interview_stage == deleted_job.interview_stage):null;
+  //   notifyListeners();
+  // }
 
 
-  void updateStage(Job new_job,String new_stage){
-    new_job.changeStage(new_stage);
-    notifyListeners();
-  }
+  // void updateStage(Job new_job,String new_stage){
+  //   new_job.changeStage(new_stage);
+  //   notifyListeners();
+  // }
 
   void searchJob(String query){
     currentQuery=query;
-    JobsResult=jobsList.where((job){
+    JobsResult=_jobs.where((job){
       return jobCheck(query,job);
     }).toList();
     notifyListeners();
@@ -72,7 +78,7 @@ class JobData extends ChangeNotifier{
 
   void setQuery(){
     currentQuery='';
-    JobsResult=jobsList;
+    JobsResult=_jobs;
   }
 
   int getCount(){

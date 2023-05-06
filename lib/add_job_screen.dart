@@ -101,8 +101,6 @@ class _AddJobScreenState extends State<AddJobScreen> {
                     child: MaterialButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()==true) {
-                          final addedJob=Job(company:addedCompany,role:addedRole,location:addedLocation,interview_stage:"applied");
-                          Provider.of<JobData>(context, listen: false).addJob(addedJob);
                           Navigator.pop(context);
                         }
                       },

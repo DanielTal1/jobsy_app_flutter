@@ -1,7 +1,7 @@
 List<Map> stagesList=[
   {
     'id':'0',
-    'name':'applied',
+    'name':'apply',
     'image':'images/apply.png'
   },
   {

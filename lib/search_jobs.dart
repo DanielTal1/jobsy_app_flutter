@@ -45,7 +45,7 @@ class _SearchJobsState extends State<SearchJobs> {
 
 
   void mySearch(String query) {
-    Provider.of<JobData>(context, listen: false).searchJob(query);
+     Provider.of<JobData>(context, listen: false).searchJob(query);
   }
 }
 
