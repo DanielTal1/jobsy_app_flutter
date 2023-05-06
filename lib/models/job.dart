@@ -1,6 +1,6 @@
 
 class Job{
-  final String id;
+  String? id;
   final String company;
   final String role;
   final String location;
@@ -21,14 +21,14 @@ class Job{
         lastUpdated:parsedJson['updatedAt'],
         company_photo:parsedJson['company_photo'],
         archive:parsedJson['archive']
-
-
     );
   }
 
 
 
-  Job({required this.id,required this.company, required this.role, required this.location,this.lastUpdated,required this.interview_stage,this.url,this.company_photo,  this.archive});
+
+
+  Job({this.id,required this.company, required this.role, required this.location,this.lastUpdated,required this.interview_stage,this.url,this.company_photo,  this.archive});
 
   void changeStage(String new_stage ){
     this.interview_stage=new_stage;

@@ -14,16 +14,16 @@ class Jobsy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context)=>JobData(),
-      child:MaterialApp(
-      initialRoute:HomePage.id,
-      routes:{
-        HomePage.id:(context)=>HomePage(),
-         WelcomeScreen.id:(context)=>WelcomeScreen(),
-         Login.id:(context)=> Login(),
-         SignUpPage.id:(context)=>SignUpPage(),
-      },
-    )
+        create: (context)=>JobData(),
+        child:MaterialApp(
+          initialRoute:HomePage.id,
+          routes:{
+            HomePage.id:(context)=>HomePage(),
+            WelcomeScreen.id:(context)=>WelcomeScreen(),
+            Login.id:(context)=> Login(),
+            SignUpPage.id:(context)=>SignUpPage(),
+          },
+        )
     );
   }
 }
