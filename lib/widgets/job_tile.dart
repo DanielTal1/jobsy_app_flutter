@@ -13,7 +13,7 @@ class JobTile extends StatelessWidget {
       title:Text(currentJob.role),
       trailing:Container(child:Row(children: [
         Column(children: [
-          // Text(currentJob.lastUpdated),
+          Text(currentJob.lastUpdated),
           Text(currentJob.interview_stage)]
       ),
       ]),width:130.0),

@@ -6,7 +6,7 @@ class Job{
   final String location;
   String? url;
   String interview_stage;
-  String? lastUpdated;
+  String lastUpdated;
   String company_logo;
   // bool? archive;
 
@@ -42,7 +42,7 @@ class Job{
 
 
 
-  Job({required this.id,required this.company, required this.role, required this.location, this.lastUpdated,required this.interview_stage, this.url,required this.company_logo});
+  Job({required this.id,required this.company, required this.role, required this.location, required this.lastUpdated,required this.interview_stage, this.url,required this.company_logo});
 
   void changeStage(String new_stage ){
     this.interview_stage=new_stage;

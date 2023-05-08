@@ -18,10 +18,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool showSearch = false;
-  int jobCount=0;
+  late String searchedQuery="";
+
+  void searchCallBackClose(){
+    setState(() {
+      showSearch=false;
+    });
+  }
+
+  void searchCallBackGetQuery(String newSearch){
+    setState(() {
+      searchedQuery=newSearch;
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    jobCount=Provider.of<JobData>(context).getCount();
     return Scaffold(resizeToAvoidBottomInset : false,
         backgroundColor: Color(0xFFF9F5EB),
         appBar: AppBar(
@@ -30,7 +41,6 @@ class _HomePageState extends State<HomePage> {
             title:Text('Jobsy'),
             backgroundColor:const Color(0xFF126180),
             actions: [
-              Text('count: $jobCount',style:TextStyle(fontSize: 15)),
               IconButton(onPressed: (){},
                   icon:Icon(Icons.more_vert))
             ],
@@ -51,14 +61,13 @@ class _HomePageState extends State<HomePage> {
                       IconButton(onPressed: (){},
                           icon:Icon(Icons.sort,  color: Colors.white)),
                     ],),
-                ) : SearchJobs((){
-                  setState(() {
-                    showSearch=false;
-                  });
-                })
+                ) : SearchJobs(
+                    closeCallBack:searchCallBackClose,
+                    searchCallBack:searchCallBackGetQuery
+                )
             )
         ),
-        body:showSearch?JobList("Search"):JobList("All"),
+        body:JobList(searchedQuery:searchedQuery),
         floatingActionButton:FloatingActionButton(
             onPressed: (){
               showModalBottomSheet(context: context,isScrollControlled: true, builder:(context)=>
