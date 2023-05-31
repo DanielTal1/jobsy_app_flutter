@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:jobsy_app_flutter/home_page.dart';
+import 'package:jobsy_app_flutter/recommend_page.dart';
 import 'package:jobsy_app_flutter/welcome_screen.dart';
 import 'package:jobsy_app_flutter/login.dart';
 import 'package:jobsy_app_flutter/sign_up_page.dart';
 import 'package:provider/provider.dart';
 
 import 'models/Job_data.dart';
+import 'models/recommendation_data.dart';
 
 
 void main() => runApp(Jobsy());
@@ -13,8 +15,15 @@ void main() => runApp(Jobsy());
 class Jobsy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context)=>JobData(),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<JobData>(
+            create: (context)=>JobData(),
+          ),
+          ChangeNotifierProvider<RecommendationData>(
+            create: (_) => RecommendationData(),
+          ),
+        ],
         child:MaterialApp(
           initialRoute:HomePage.id,
           routes:{
@@ -22,6 +31,7 @@ class Jobsy extends StatelessWidget {
             WelcomeScreen.id:(context)=>WelcomeScreen(),
             Login.id:(context)=> Login(),
             SignUpPage.id:(context)=>SignUpPage(),
+            RecommendPage.id:(context)=>RecommendPage(),
           },
         )
     );

@@ -11,15 +11,18 @@ class SearchJobs extends StatefulWidget {
 
   const SearchJobs({super.key, required this.closeCallBack, required this.searchCallBack});
   @override
-  State<SearchJobs> createState() => _SearchJobsState(searchCallBack:searchCallBack, closeCallBack: closeCallBack);
+  State<SearchJobs> createState() => _SearchJobsState();
 }
 
 class _SearchJobsState extends State<SearchJobs> {
-  final Function closeCallBack;
-  final Function searchCallBack;
+  late Function closeCallBack;
+  late Function searchCallBack;
   final _searchController = TextEditingController();
-
-  _SearchJobsState({required this.closeCallBack, required this.searchCallBack});
+  void initState() {
+    super.initState();
+    closeCallBack=widget.closeCallBack;
+    searchCallBack=widget.searchCallBack;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(

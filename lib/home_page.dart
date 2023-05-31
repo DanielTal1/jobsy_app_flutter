@@ -5,12 +5,9 @@ import 'add_job_screen.dart';
 import 'models/Job_data.dart';
 import 'search_jobs.dart';
 
-
-
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-  static const String id='Home_page';
+  static const String id = 'Home_page';
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,83 +15,149 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool showSearch = false;
-  late String searchedQuery="";
+  late String searchedQuery = "";
+  String selectedStage = '';
+  bool isTileSelected = false;
+  Set<int> selectedTileIndices = {};
 
-  void searchCallBackClose(){
+  void searchCallBackClose() {
     setState(() {
-      showSearch=false;
+      showSearch = false;
     });
   }
 
-  void searchCallBackGetQuery(String newSearch){
+  void searchCallBackGetQuery(String newSearch) {
     setState(() {
-      searchedQuery=newSearch;
+      searchedQuery = newSearch;
     });
   }
+
+  void filterJobs(String stage) {
+    setState(() {
+      selectedStage = stage;
+      // Perform filtering based on the selected stage
+      // You can update the 'searchedQuery' or call a filtering method
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(resizeToAvoidBottomInset : false,
-        backgroundColor: Color(0xFFF9F5EB),
-        appBar: AppBar(
-            leading: IconButton(onPressed: (){},
-                icon:Icon(Icons.menu)),
-            title:Text('Jobsy'),
-            backgroundColor:const Color(0xFF126180),
-            actions: [
-              IconButton(onPressed: (){},
-                  icon:Icon(Icons.more_vert))
-            ],
-            bottom:PreferredSize(
-                preferredSize: Size.fromHeight(50.0),
-                child: showSearch==false? Expanded(
-                  child: Row( mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButton(onPressed: (){
-                        setState(() {
-                          showSearch = true;
-                        });
-                      },
-                          icon:Icon(Icons.search,  color: Colors.white,
-                          )),
-                      IconButton(onPressed: (){},
-                          icon:Icon(Icons.filter_alt_outlined,  color: Colors.white)),
-                      IconButton(onPressed: (){},
-                          icon:Icon(Icons.sort,  color: Colors.white)),
-                    ],),
-                ) : SearchJobs(
-                    closeCallBack:searchCallBackClose,
-                    searchCallBack:searchCallBackGetQuery
-                )
-            )
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Color(0xFFF9F5EB),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.menu),
         ),
-        body:JobList(searchedQuery:searchedQuery),
-        floatingActionButton:FloatingActionButton(
-            onPressed: (){
-              showModalBottomSheet(context: context,isScrollControlled: true, builder:(context)=>
-                  SingleChildScrollView(
-                      child: GestureDetector(
-                          child:Padding(
-                              padding:EdgeInsets.only(
-                                  bottom: MediaQuery.of(context).viewInsets.bottom
-                              ),child: Container(decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20.0),
-                                topRight: Radius.circular(20.0),
-                              )
-                          ),
-                              child:AddJobScreen()
-                          )
-                          )
-                      )
-                  )
-              );
-            },
-            child: Icon(Icons.add),
-            backgroundColor:  Color(0xFF126180)
+        title: Text('Jobsy'),
+        backgroundColor: const Color(0xFF126180),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.more_vert),
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: showSearch == false
+              ? Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      showSearch = true;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  onSelected: (stage) {
+                    filterJobs(stage);
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: '',
+                      child: Text('All'),
+                    ),
+                    PopupMenuItem(
+                      value: 'apply',
+                      child: Text('Apply'),
+                    ),
+                    PopupMenuItem(
+                      value: 'HR Interview',
+                      child: Text('HR Interview'),
+                    ),
+                    PopupMenuItem(
+                      value: '1st Interview',
+                      child: Text('1st Interview'),
+                    ),
+                    PopupMenuItem(
+                      value: '2nd Interview',
+                      child: Text('2nd Interview'),
+                    ),
+                    PopupMenuItem(
+                      value: 'offer',
+                      child: Text('Offer'),
+                    ),
+                  ],
+                  child: Icon(
+                    Icons.filter_alt_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.archive,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          )
+              : SearchJobs(
+            closeCallBack: searchCallBackClose,
+            searchCallBack: searchCallBackGetQuery,
+          ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+      ),
+      body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => SingleChildScrollView(
+              child: GestureDetector(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0),
+                      ),
+                    ),
+                    child: AddJobScreen(),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xFF126180),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
-

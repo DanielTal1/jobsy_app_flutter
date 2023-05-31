@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 
 
-class AddJobScreen extends StatefulWidget {
+class AddCommentScreen extends StatefulWidget {
 
   @override
-  State<AddJobScreen> createState() => _AddJobScreenState();
+  State<AddCommentScreen> createState() => _AddCommentScreen();
 }
 
-class _AddJobScreenState extends State<AddJobScreen> {
+class _AddCommentScreen extends State<AddCommentScreen> {
 
   static final _formKey = GlobalKey<FormState>();
-  final _company = TextEditingController();
   final _role = TextEditingController();
-  final _location = TextEditingController();
-  late String addedCompany;
+  final _text = TextEditingController();
   late String addedRole;
-  late String addedLocation;
+  late String addedText;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xff757575),
+      color: const Color(0xFFFFF5EE),
       child: Container(
         padding: EdgeInsets.all(20.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:const Color(0xFFFFF5EE),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
             topRight: Radius.circular(20.0),
@@ -38,23 +36,9 @@ class _AddJobScreenState extends State<AddJobScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 20.0),
-                Text('Add Job',
+                Text('Add Comment',
                     style:TextStyle(fontSize: 20.0,color:Color(0xFF0077c0))),
                 SizedBox(height: 10.0),
-                TextFormField(
-                  onChanged: (newValue) => addedCompany = newValue,
-                  controller: _company,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Company',
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter a company';
-                    }
-                    return null;
-                  },
-                ),
                 SizedBox(height: 5.0),
                 TextFormField(
                   onChanged: (newValue) => addedRole = newValue,
@@ -72,15 +56,15 @@ class _AddJobScreenState extends State<AddJobScreen> {
                 ),
                 SizedBox(height: 5.0),
                 TextFormField(
-                  onChanged: (newValue) => addedLocation = newValue,
-                  controller: _location,
+                  onChanged: (newValue) => addedText = newValue,
+                  controller: _text,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Location',
+                    labelText: 'Text',
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter a location';
+                      return 'Please enter your comment';
                     }
                     return null;
                   },
@@ -104,7 +88,7 @@ class _AddJobScreenState extends State<AddJobScreen> {
                       minWidth: 40.0,
                       height: 42.0,
                       child: Text(
-                        'Add Job',
+                        'Add Comment',
                       ),
 
                     ),

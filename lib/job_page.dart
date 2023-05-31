@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobsy_app_flutter/widgets/comment_list.dart';
 import 'package:provider/provider.dart';
 
 import 'models/Job_data.dart';
@@ -25,11 +26,6 @@ class _JobPageState extends State<JobPage> {
             title:Text('Jobsy'),
             backgroundColor:const Color(0xFF126180),
             actions: [
-              IconButton(onPressed:(){
-                // Provider.of<JobData>(context, listen: false).deleteJob(currentJob);
-                Navigator.pop(context);
-              },
-              icon:Icon(Icons.delete)),
               IconButton(onPressed: (){},
                   icon:Icon(Icons.more_vert))
             ]
@@ -132,7 +128,14 @@ class _JobPageState extends State<JobPage> {
                         )
                 ),
               )
+              ),
+              Card(
+                color:const Color(0xFFFFF5EE),
+                child:CommentList(currentCompany: currentJob.company),
               )
+
+
+
 
             ],
           )

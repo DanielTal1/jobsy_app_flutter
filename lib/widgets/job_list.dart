@@ -6,22 +6,23 @@ import 'job_tile.dart';
 
 class JobList extends StatefulWidget {
   final searchedQuery;
+  final selectedStage;
 
-  const JobList({super.key, required this.searchedQuery});
+  const JobList({super.key, required this.searchedQuery, required this.selectedStage});
 
   @override
-  State<JobList> createState() => _JobListState(searchedQuery:searchedQuery);
+  State<JobList> createState() => _JobListState();
 }
 
 class _JobListState extends State<JobList> {
   late String searchedQuery;
-
-  _JobListState({required this.searchedQuery});
+  late String selectedStage;
 
   @override
   void initState() {
     super.initState();
     searchedQuery = widget.searchedQuery;
+    selectedStage=widget.selectedStage;
   }
 
 
@@ -30,12 +31,13 @@ class _JobListState extends State<JobList> {
     final company = currentJob.company.toLowerCase();
     final role = currentJob.role.toLowerCase();
     final input = query.toLowerCase();
-    return role.contains(input) || company.contains(input);
+    final isSearch=role.contains(input) || company.contains(input);
+    final isStage=selectedStage=='' || selectedStage==currentJob.interview_stage;
+    return isSearch&&isStage;
   }
 
   @override
   Widget build(BuildContext context) {
-
 
     final jobProvider = Provider.of<JobData>(context);
     final shownJobs = jobProvider.jobs.where((job) => jobCheck(searchedQuery,job)).toList();
@@ -55,5 +57,6 @@ class _JobListState extends State<JobList> {
   void didUpdateWidget(JobList oldWidget) {
     super.didUpdateWidget(oldWidget);
     searchedQuery = widget.searchedQuery;
+    selectedStage=widget.selectedStage;
   }
 }
