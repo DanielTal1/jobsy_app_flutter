@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AddJobScreen extends StatefulWidget {
+  final Function addJobCallback;
+
+  const AddJobScreen({super.key, required this.addJobCallback});
+
 
   @override
   State<AddJobScreen> createState() => _AddJobScreenState();
@@ -16,6 +21,48 @@ class _AddJobScreenState extends State<AddJobScreen> {
   late String addedCompany;
   late String addedRole;
   late String addedLocation;
+  late Function addJobCallback;
+
+  @override
+  void initState() {
+    super.initState();
+    addJobCallback=widget.addJobCallback;
+  }
+
+  Future<void> postJob() async {
+    final url = Uri.parse('http://10.0.2.2:3000/jobs'); // Change the URL accordingly for Android emulator
+    final body = json.encode({
+      "username": 'ravid',
+      "company":addedCompany ,
+      "role": addedRole,
+      "location": addedLocation,
+      "url":""
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // Request successful
+        print('Job created successfully');
+      } else {
+        // Request failed
+        print('Failed to create job: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Error occurred during the request
+      print('Error creating job: $error');
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +143,11 @@ class _AddJobScreenState extends State<AddJobScreen> {
                     borderRadius: BorderRadius.circular(30.0),
                     elevation: 5.0,
                     child: MaterialButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()==true) {
                           Navigator.pop(context);
+                          await postJob();
+                          addJobCallback();
                         }
                       },
                       minWidth: 40.0,

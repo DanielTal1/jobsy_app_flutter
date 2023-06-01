@@ -4,21 +4,25 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'job.dart';
 
-class JobData extends ChangeNotifier{
+class JobData extends ChangeNotifier {
   List<Job> _jobs = [];
   bool _isLoading = false;
+
   List<Job> get jobs => _jobs;
+
   bool get isLoading => _isLoading;
 
   JobData() {
     fetchJobs();
   }
 
+
   Future<void> fetchJobs() async {
     _isLoading = true;
     notifyListeners();
     try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:3000/jobs/user/ravid'));
+      final response = await http.get(
+          Uri.parse('http://10.0.2.2:3000/jobs/user/ravid'));
       final jsonData = json.decode(response.body) as List<dynamic>;
       _jobs = jsonData.map((jobData) => Job.fromJson(jobData)).toList();
       _isLoading = false;
@@ -30,48 +34,19 @@ class JobData extends ChangeNotifier{
     }
   }
 
+  void updateStage(newStage,jobId){
+    int index = jobs.indexWhere((job) => job.id == jobId);
 
-// void updateJobLIst(){
-//
-// }
+    if (index != -1) {
+      Job job = jobs[index];
+      job.interview_stage = newStage;
+      jobs.removeAt(index);
+      jobs.insert(0, job);
+      notifyListeners();
+    } else {
+      print('Job not found');
+    }
 
-// void addJob(Job new_job){
-//   jobsList.insert(0,new_job);
-//   currentQuery!=''&& jobCheck(currentQuery,new_job)? JobsResult.insert(0,new_job):null;
-//   notifyListeners();
-// }
-//
-// void deleteJob(Job deleted_job){
-//   jobsList.removeWhere((job) => job.company == deleted_job.company &&
-//       job.role == deleted_job.role && job.location == deleted_job.location &&
-//       job.interview_stage == deleted_job.interview_stage);
-//   currentQuery!=''&& jobCheck(currentQuery,deleted_job)?
-//   JobsResult.removeWhere((job) => job.company == deleted_job.company &&
-//       job.role == deleted_job.role && job.location == deleted_job.location &&
-//       job.interview_stage == deleted_job.interview_stage):null;
-//   notifyListeners();
-// }
+  }
 
-
-// void updateStage(Job new_job,String new_stage){
-//   new_job.changeStage(new_stage);
-//   notifyListeners();
-// }
-
-
-// bool jobCheck(String query,Job currentJob){
-//   final company=currentJob.company.toLowerCase();
-//   final role=currentJob.role.toLowerCase();
-//   final input=query.toLowerCase();
-//   return role.contains(input)||company.contains(input);
-// }
-//
-// void setQuery(){
-//   currentQuery='';
-//   JobsResult=_jobs;
-// }
-//
-// int getCount(){
-//   return JobsResult.length;
-// }
 }

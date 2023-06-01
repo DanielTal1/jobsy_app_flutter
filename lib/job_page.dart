@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:jobsy_app_flutter/widgets/comment_list.dart';
 import 'package:provider/provider.dart';
 
 import 'models/Job_data.dart';
+import 'models/company.dart';
 import 'models/job.dart';
 import 'models/stage.dart';
-
+import 'package:http/http.dart' as http;
 class JobPage extends StatefulWidget {
   final Job currentJob;
   JobPage({required this.currentJob});
@@ -18,9 +21,58 @@ class JobPage extends StatefulWidget {
 class _JobPageState extends State<JobPage> {
   final Job currentJob;
   _JobPageState({required this.currentJob});
+  late Company currentCompany;
   late String selected_stage=currentJob.interview_stage;
+
+  Future<void> fetchCompany(String companyName) async {
+    try {
+      final response = await http.get(Uri.parse('http://10.0.2.2:3000/company/' + companyName));
+      final jsonData = json.decode(response.body) as List<dynamic>;
+      setState(() {
+        currentCompany = Company.fromJson(jsonData[0]);
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  Future<void> updateJob( String newStage) async {
+    final url = Uri.parse('http://10.0.2.2:3000/jobs/'+currentJob.id);
+
+    try {
+      final response =await http.put(url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'stage': newStage}),
+      );
+      if (response.statusCode == 200) {
+        print('Job updated successfully');
+      } else {
+        print('Failed to update job. Error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error updating job: $error');
+    }
+
+  }
+
+
+
+
   @override
+  void initState() {
+    super.initState();
+    currentCompany=Company(
+        name: currentJob.company,
+        rating: 0,
+        logo: currentJob.company_logo,
+        description: ""
+    );
+    fetchCompany(currentJob.company);
+  }
+
   Widget build(BuildContext context) {
+    final jobData = Provider.of<JobData>(context, listen: false);
     return Scaffold(resizeToAvoidBottomInset : false,
         appBar: AppBar(
             title:Text('Jobsy'),
@@ -54,6 +106,17 @@ class _JobPageState extends State<JobPage> {
                 ])
                    )
               ),
+              if(currentCompany.description!="")Container(
+                  child: Card(
+                      color: const Color(0xFFFFF5EE),
+                      elevation:20,
+                      child:Padding(
+                          padding: const EdgeInsets.all(20),
+                          child:Center(child: Text(currentCompany.description ,style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
+                      )
+
+                  )
+              ),
               IntrinsicHeight(child:
               Row(crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -64,7 +127,7 @@ class _JobPageState extends State<JobPage> {
                           elevation:20,
                           child:Padding(
                               padding: const EdgeInsets.all(20),
-                              child:Center(child: Text(currentJob.role ,style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
+                              child:Center(child: Text(currentJob.role ,style: TextStyle(fontSize: 15),textAlign: TextAlign.left))
                           )
                       ),
                     )
@@ -83,7 +146,7 @@ class _JobPageState extends State<JobPage> {
                 ),
 
               ],)
-        ),
+              ),
               Container(
                 child: Card(
                     color: const Color(0xFFFFF5EE),
@@ -101,8 +164,11 @@ class _JobPageState extends State<JobPage> {
                                     value: selected_stage,
                                     onChanged: (newValue){
                                       setState(() {
-                                        newValue!=null?
-                                        selected_stage=newValue:null;
+                                        if(newValue!=null){
+                                          selected_stage=newValue;
+                                          jobData.updateStage(newValue,currentJob.id);
+                                          updateJob(newValue);
+                                        }
                                       });
                                     },
                                     items: stagesList.map((stageItem){
@@ -133,9 +199,6 @@ class _JobPageState extends State<JobPage> {
                 color:const Color(0xFFFFF5EE),
                 child:CommentList(currentCompany: currentJob.company),
               )
-
-
-
 
             ],
           )

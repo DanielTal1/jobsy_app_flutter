@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   void searchCallBackClose() {
     setState(() {
+      searchedQuery = "";
       showSearch = false;
     });
   }
@@ -66,8 +67,16 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void  UpdateAPiCallback() async{
+    final jobData = Provider.of<JobData>(context, listen: false);
+    await jobData.fetchJobs();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
+    final jobData = Provider.of<JobData>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xFFF9F5EB),
@@ -85,6 +94,10 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.delete),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.archive),
                 ),
                 IconButton(
                   onPressed: () {},
@@ -186,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                         topRight: Radius.circular(20.0),
                       ),
                     ),
-                    child: AddJobScreen(),
+                    child: AddJobScreen(addJobCallback:UpdateAPiCallback),
                   ),
                 ),
               ),
