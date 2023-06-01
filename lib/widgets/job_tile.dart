@@ -6,7 +6,32 @@ import 'package:jobsy_app_flutter/models/job.dart';
 
 class JobTile extends StatelessWidget {
   final Job currentJob;
-  JobTile({required this.currentJob});
+  final Function addSelectedCallback;
+  final Function removeSelectedCallback;
+  final Function isSelectedListEmptyCallback;
+  final Function isJobSelected;
+  JobTile({required this.currentJob, required this.addSelectedCallback, required this.removeSelectedCallback, required this.isSelectedListEmptyCallback, required  this.isJobSelected});
+
+  void onTapActions(context){
+    if(isSelectedListEmptyCallback()){
+      Navigator.push(context,MaterialPageRoute(builder: (context)=>JobPage(currentJob: currentJob)));
+    }
+    else if (isJobSelected(currentJob)){
+      removeSelectedCallback(currentJob);
+    }
+    else{
+      addSelectedCallback(currentJob);
+    }
+  }
+
+  void onLongPressActions(context){
+    if(isJobSelected(currentJob)){
+      removeSelectedCallback(currentJob);
+    } else{
+      addSelectedCallback(currentJob);
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     return  ListTile(
@@ -15,17 +40,16 @@ class JobTile extends StatelessWidget {
         Column(children: [
           Text(currentJob.lastUpdated),
           Text(currentJob.interview_stage)]
-      ),
+        ),
       ]),width:130.0),
       subtitle: Text(currentJob.company+" , "+currentJob.location),
       leading:ClipRRect(
         borderRadius: BorderRadius.circular(8), // Image border
         child: currentJob.company_logo==""?Image.asset('images/company.png',fit: BoxFit.cover,height: 50.0):Image.network(currentJob.company_logo, fit: BoxFit.cover,height: 50.0),
-        ),
-      onTap:()=> Navigator.push(context,MaterialPageRoute(builder: (context)=>
-        JobPage(currentJob: currentJob)
-      )),
-      );
+      ),
+      onTap:()=> onTapActions(context),
+      onLongPress:()=>onLongPressActions(context) ,
+    );
   }
 }
 

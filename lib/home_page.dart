@@ -3,6 +3,7 @@ import 'package:jobsy_app_flutter/widgets/job_list.dart';
 import 'package:provider/provider.dart';
 import 'add_job_screen.dart';
 import 'models/Job_data.dart';
+import 'models/job.dart';
 import 'search_jobs.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,8 +18,8 @@ class _HomePageState extends State<HomePage> {
   bool showSearch = false;
   late String searchedQuery = "";
   String selectedStage = '';
-  bool isTileSelected = false;
-  Set<int> selectedTileIndices = {};
+  List<Job> selectedJobs = [];
+
 
   void searchCallBackClose() {
     setState(() {
@@ -40,6 +41,31 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void addSelectedCallback(Job currentJob){
+    setState(() {
+      selectedJobs.add(currentJob);
+    });
+  }
+
+  bool isJobSelectedCallback(Job currentJob){
+    return selectedJobs.contains(currentJob);
+  }
+
+  void removeSelectedCallback(Job currentJob){
+    setState(() {
+      selectedJobs.remove(currentJob);
+    });
+  }
+  bool isSelectedListEmptyCallback(){
+    return selectedJobs.isEmpty;
+  }
+
+  void deleteAllSelected(){
+    setState(() {
+      selectedJobs=[];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,10 +79,23 @@ class _HomePageState extends State<HomePage> {
         title: Text('Jobsy'),
         backgroundColor: const Color(0xFF126180),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.more_vert),
-          ),
+          if (!isSelectedListEmptyCallback())
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.delete),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.push_pin),
+                ),
+                IconButton(
+                  onPressed: () {deleteAllSelected();},
+                  icon: Icon(Icons.close),
+                ),
+              ],
+            ),
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(50.0),
@@ -127,7 +166,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage),
+      body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage, addSelectedCallback:addSelectedCallback, isJobSelected: isJobSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
