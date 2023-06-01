@@ -34,19 +34,12 @@ class JobData extends ChangeNotifier {
     }
   }
 
-  void updateStage(newStage,jobId){
-    int index = jobs.indexWhere((job) => job.id == jobId);
-
-    if (index != -1) {
-      Job job = jobs[index];
-      job.interview_stage = newStage;
-      jobs.removeAt(index);
-      jobs.insert(0, job);
-      notifyListeners();
-    } else {
-      print('Job not found');
-    }
-
+  void updateStage(newStage,JobId){
+     Job job=jobs.firstWhere((job) => job.id == JobId);
+     job.interview_stage = newStage;
+     jobs.remove(job);
+     jobs.insert(0,job);
+     notifyListeners();
   }
 
 }

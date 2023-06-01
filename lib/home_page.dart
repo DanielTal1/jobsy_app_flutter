@@ -142,19 +142,19 @@ class _HomePageState extends State<HomePage> {
                       child: Text('Apply'),
                     ),
                     PopupMenuItem(
-                      value: 'HR Interview',
+                      value: 'hr interview',
                       child: Text('HR Interview'),
                     ),
                     PopupMenuItem(
-                      value: '1st Interview',
+                      value: '1st interview',
                       child: Text('1st Interview'),
                     ),
                     PopupMenuItem(
-                      value: '2nd Interview',
+                      value: '2nd interview',
                       child: Text('2nd Interview'),
                     ),
                     PopupMenuItem(
-                      value: 'offer',
+                      value: 'Offer',
                       child: Text('Offer'),
                     ),
                   ],

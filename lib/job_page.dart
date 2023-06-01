@@ -38,6 +38,7 @@ class _JobPageState extends State<JobPage> {
 
 
   Future<void> updateJob( String newStage) async {
+    print(currentJob.id);
     final url = Uri.parse('http://10.0.2.2:3000/jobs/'+currentJob.id);
 
     try {
@@ -162,14 +163,14 @@ class _JobPageState extends State<JobPage> {
                                   child:DropdownButton(
                                     hint:Text('Select Stage'),
                                     value: selected_stage,
-                                    onChanged: (newValue){
-                                      setState(() {
-                                        if(newValue!=null){
+                                    onChanged: (newValue) async {
+                                      if(newValue!=null){
+                                        setState(() {
                                           selected_stage=newValue;
-                                          jobData.updateStage(newValue,currentJob.id);
-                                          updateJob(newValue);
-                                        }
-                                      });
+                                        });
+                                        jobData.updateStage(newValue,currentJob.id);
+                                        updateJob(newValue);
+                                      }
                                     },
                                     items: stagesList.map((stageItem){
                                       return DropdownMenuItem(
