@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import 'models/username_data.dart';
+
 
 class AddJobScreen extends StatefulWidget {
   final Function addJobCallback;
@@ -31,9 +33,13 @@ class _AddJobScreenState extends State<AddJobScreen> {
   }
 
   Future<void> postJob() async {
+    String? username=await UsernameData.getUsername();
+    if(username==null){
+      return;
+    }
     final url = Uri.parse('http://10.0.2.2:3000/jobs'); // Change the URL accordingly for Android emulator
     final body = json.encode({
-      "username": 'ravid',
+      "username": username,
       "company":addedCompany ,
       "role": addedRole,
       "location": addedLocation,

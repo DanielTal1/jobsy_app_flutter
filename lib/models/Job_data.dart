@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobsy_app_flutter/models/username_data.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'job.dart';
@@ -21,10 +22,14 @@ class JobData extends ChangeNotifier {
 
   Future<void> fetchJobs() async {
     _isLoading = true;
+    String? username=await UsernameData.getUsername();
+    if(username==null){
+      return;
+    }
     notifyListeners();
     try {
       final response = await http.get(
-          Uri.parse('http://10.0.2.2:3000/jobs/user/ravid'));
+          Uri.parse('http://10.0.2.2:3000/jobs/user/'+username));
       final jsonData = json.decode(response.body) as List<dynamic>;
       _jobs = jsonData.map((jobData) => Job.fromJson(jobData)).toList();
       _isLoading = false;
@@ -39,10 +44,14 @@ class JobData extends ChangeNotifier {
 
   Future<void> fetchJobsArchive() async {
     _isLoading = true;
+    String? username=await UsernameData.getUsername();
+    if(username==null){
+      return;
+    }
     notifyListeners();
     try {
       final response = await http.get(
-          Uri.parse('http://10.0.2.2:3000/jobs/archive/ravid'));
+          Uri.parse('http://10.0.2.2:3000/jobs/archive/'+username));
       final jsonData = json.decode(response.body) as List<dynamic>;
       _jobs = jsonData.map((jobData) => Job.fromJson(jobData)).toList();
       _isLoading = false;

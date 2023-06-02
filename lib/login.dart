@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:jobsy_app_flutter/models/username_data.dart';
 
 import 'home_page.dart';
 import 'package:http/http.dart' as http;
@@ -36,7 +37,6 @@ class _Login extends State<Login> {
     }
     return false;
   }
-
 
 
 
@@ -118,6 +118,7 @@ class _Login extends State<Login> {
                       loginError="";
                       if (_formKey.currentState!.validate()) {
                         if(await checkLogin()){
+                          await UsernameData.saveUsername(_usernameController.text);
                           Navigator.pushNamed(context, HomePage.id);
                         }
                         else{

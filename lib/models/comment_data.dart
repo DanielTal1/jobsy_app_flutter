@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:jobsy_app_flutter/models/username_data.dart';
 import 'dart:convert';
 
 import 'comment.dart';
@@ -28,11 +29,15 @@ class CommentData extends ChangeNotifier{
 
 
   Future<void> addComment(String company,String text,String role) async {
+    String? username=await UsernameData.getUsername();
+    if(username==null){
+      return;
+    }
     final url = Uri.parse('http://10.0.2.2:3000/comments');
     // Define the request body
     final requestBody = json.encode({
       'company': company,
-      'username': 'ravid',
+      'username': username,
       'text': text,
       'role': role,
     });
@@ -60,9 +65,13 @@ class CommentData extends ChangeNotifier{
   }
 
   Future<void> addCommentLocally(String company, String text, String role) async {
+    String? username=await UsernameData.getUsername();
+    if(username==null){
+      return;
+    }
     Comment newComment = Comment(
       company: company,
-      username: 'ravid',
+      username: username,
       text: text,
       role: role,
     );
