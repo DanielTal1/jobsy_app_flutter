@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'models/comment_data.dart';
 
 
 class AddCommentScreen extends StatefulWidget {
+  final String currentCompany;
+
+  const AddCommentScreen({super.key, required this.currentCompany});
+
 
   @override
   State<AddCommentScreen> createState() => _AddCommentScreen();
@@ -17,6 +24,7 @@ class _AddCommentScreen extends State<AddCommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final commentProvider = Provider.of<CommentData>(context);
     return Container(
       color: const Color(0xFFFFF5EE),
       child: Container(
@@ -80,9 +88,11 @@ class _AddCommentScreen extends State<AddCommentScreen> {
                     borderRadius: BorderRadius.circular(30.0),
                     elevation: 5.0,
                     child: MaterialButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()==true) {
                           Navigator.pop(context);
+                          await commentProvider.addCommentLocally(widget.currentCompany,addedText,addedRole);
+                          commentProvider.addComment(widget.currentCompany,addedText,addedRole);
                         }
                       },
                       minWidth: 40.0,

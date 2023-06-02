@@ -37,28 +37,6 @@ class _JobPageState extends State<JobPage> {
   }
 
 
-  Future<void> updateJob( String newStage) async {
-    print(currentJob.id);
-    final url = Uri.parse('http://10.0.2.2:3000/jobs/'+currentJob.id);
-
-    try {
-      final response =await http.put(url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({'stage': newStage}),
-      );
-      if (response.statusCode == 200) {
-        print('Job updated successfully');
-      } else {
-        print('Failed to update job. Error: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error updating job: $error');
-    }
-
-  }
-
-
-
 
   @override
   void initState() {
@@ -78,10 +56,6 @@ class _JobPageState extends State<JobPage> {
         appBar: AppBar(
             title:Text('Jobsy'),
             backgroundColor:const Color(0xFF126180),
-            actions: [
-              IconButton(onPressed: (){},
-                  icon:Icon(Icons.more_vert))
-            ]
         ),
         body:Padding(
           padding:const EdgeInsets.all(20),
@@ -168,8 +142,8 @@ class _JobPageState extends State<JobPage> {
                                         setState(() {
                                           selected_stage=newValue;
                                         });
-                                        jobData.updateStage(newValue,currentJob.id);
-                                        updateJob(newValue);
+                                        jobData.updateStageLocally(newValue, currentJob.id);
+                                        jobData.updateJob(newValue,currentJob.id);
                                       }
                                     },
                                     items: stagesList.map((stageItem){

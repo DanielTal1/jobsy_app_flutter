@@ -37,9 +37,12 @@ class JobTile extends StatelessWidget {
     return  ListTile(
       title:Text(currentJob.role),
       trailing:Container(child:Row(children: [
-        Column(children: [
-          Text(currentJob.lastUpdated),
-          Text(currentJob.interview_stage)]
+        Column(
+          children: [
+            Text(currentJob.updatedAt),
+            Text(currentJob.interview_stage),
+            if (currentJob.pin) Icon(Icons.push_pin),
+          ],
         ),
       ]),width:130.0),
       subtitle: Text(currentJob.company+" , "+currentJob.location),

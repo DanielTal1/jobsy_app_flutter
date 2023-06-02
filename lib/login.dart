@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
@@ -18,6 +18,7 @@ class _Login extends State<Login> {
   final _passwordController = TextEditingController();
   String loginError="";
 
+
   Future<bool> checkLogin() async {
     http.Response response=await http.post(
       Uri.parse('http://10.0.2.2:3000/auth/login'),
@@ -35,6 +36,8 @@ class _Login extends State<Login> {
     }
     return false;
   }
+
+
 
 
 

@@ -7,6 +7,7 @@ import 'package:jobsy_app_flutter/sign_up_page.dart';
 import 'package:provider/provider.dart';
 
 import 'models/Job_data.dart';
+import 'models/comment_data.dart';
 import 'models/recommendation_data.dart';
 
 
@@ -23,9 +24,12 @@ class Jobsy extends StatelessWidget {
           ChangeNotifierProvider<RecommendationData>(
             create: (_) => RecommendationData(),
           ),
+          ChangeNotifierProvider<CommentData>(
+            create: (_) => CommentData(),
+          ),
         ],
         child:MaterialApp(
-          initialRoute:HomePage.id,
+          initialRoute:Login.id,
           routes:{
             HomePage.id:(context)=>HomePage(),
             WelcomeScreen.id:(context)=>WelcomeScreen(),

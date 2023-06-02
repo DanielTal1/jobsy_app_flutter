@@ -6,9 +6,11 @@ class Job{
   final String location;
   String? url;
   String interview_stage;
-  String lastUpdated;
+  String updatedAt;
   String company_logo;
-  // bool? archive;
+  bool archive;
+  bool pin;
+  DateTime last_updated;
 
   factory Job.fromJson(Map<String,dynamic> parsedJson){
     return Job(
@@ -18,9 +20,11 @@ class Job{
         location:parsedJson['location'],
         url:parsedJson['url'].toString(),
         interview_stage:parsedJson['stage'],
-        lastUpdated:parsedJson['updatedAt'],
+        updatedAt:parsedJson['updatedAt'],
         company_logo:parsedJson['company_logo'],
-        // archive:parsedJson['archive']
+        archive:parsedJson['archive'],
+        pin:parsedJson['pin'],
+        last_updated:DateTime.parse(parsedJson['last_updated'])
     );
   }
 
@@ -33,8 +37,10 @@ class Job{
       'location': location,
       'url': url,
       'stage': interview_stage,
-      'updatedAt': lastUpdated,
+      'updatedAt': updatedAt,
       'company_logo': company_logo,
+      'archive': archive,
+      'pin': pin,
     };
   }
 
@@ -42,7 +48,7 @@ class Job{
 
 
 
-  Job({required this.id,required this.company, required this.role, required this.location, required this.lastUpdated,required this.interview_stage, this.url,required this.company_logo});
+  Job({required this.id,required this.company, required this.role, required this.location, required this.updatedAt,required this.interview_stage, this.url,required this.company_logo, required this.archive,required this.pin, required this.last_updated});
 
   void changeStage(String new_stage ){
     this.interview_stage=new_stage;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jobsy_app_flutter/add_comment_screen.dart';
+import 'package:jobsy_app_flutter/models/comment_data.dart';
+import 'package:provider/provider.dart';
 import '../models/comment.dart';
 import 'comment_tile.dart';
 
@@ -15,28 +17,14 @@ class CommentList extends StatefulWidget {
 }
 
 class _CommentListState extends State<CommentList> {
-  List<Comment> comments = [];
 
-  Future<void> fetchComments(String companyName) async {
-    try {
-      final response = await http.get(Uri.parse('http://10.0.2.2:3000/comments/' + companyName));
-      final jsonData = json.decode(response.body) as List<dynamic>;
-      setState(() {
-        comments = jsonData.map((commentData) => Comment.fromJson(commentData)).toList();
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchComments(widget.currentCompany);
-  }
+
 
   @override
   Widget build(BuildContext context) {
+    final commentProvider = Provider.of<CommentData>(context);
+    commentProvider.fetchComments(widget.currentCompany);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -44,7 +32,7 @@ class _CommentListState extends State<CommentList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '   Comments (${comments.length})',
+              '   Comments (${commentProvider.comments.length})',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Align(
@@ -68,7 +56,7 @@ class _CommentListState extends State<CommentList> {
                                 topRight: Radius.circular(20.0),
                               ),
                             ),
-                            child: AddCommentScreen(),
+                            child: AddCommentScreen(currentCompany:widget.currentCompany),
                           ),
                         ),
                       ),
@@ -86,9 +74,9 @@ class _CommentListState extends State<CommentList> {
             Container(
               height: 250, // Set a fixed height for the comment section
               child: ListView.builder(
-                itemCount: comments.length,
+                itemCount: commentProvider.comments.length,
                 itemBuilder: (context, index) {
-                  return CommentTile(currentComment: comments[index]);
+                  return CommentTile(currentComment: commentProvider.comments[index]);
                 },
               ),
             ),

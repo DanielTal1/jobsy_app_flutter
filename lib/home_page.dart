@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   late String searchedQuery = "";
   String selectedStage = '';
   List<Job> selectedJobs = [];
+  bool isArchive=false;
 
 
   void searchCallBackClose() {
@@ -70,6 +71,8 @@ class _HomePageState extends State<HomePage> {
   void  UpdateAPiCallback() async{
     final jobData = Provider.of<JobData>(context, listen: false);
     await jobData.fetchJobs();
+
+
   }
 
 
@@ -85,22 +88,38 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {},
           icon: Icon(Icons.menu),
         ),
-        title: Text('Jobsy'),
+        title: isArchive?Text('Jobsy|Archive'):Text('Jobsy'),
         backgroundColor: const Color(0xFF126180),
         actions: [
           if (!isSelectedListEmptyCallback())
             Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    List<String> jobIds = selectedJobs.map((job) => job.id).toList();
+                    deleteAllSelected();
+                    jobData.deleteJobsLocally(jobIds);
+                    jobData.deleteJobs(jobIds);
+                    },
                   icon: Icon(Icons.delete),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.archive),
+                  onPressed: () async {
+                    List<String> jobIds = selectedJobs.map((job) => job.id).toList();
+                    deleteAllSelected();
+                    jobData.deleteJobsLocally(jobIds);
+                    jobData.updateArchive(jobIds);
+                  },
+                  icon: Icon(isArchive? Icons.unarchive:Icons.archive),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    List<String> jobIds = selectedJobs.map((job) => job.id).toList();
+                    deleteAllSelected();
+                    jobData.updatePinsLocally(jobIds);
+                    jobData.sortJobs();
+                    jobData.updatePins(jobIds);
+                  },
                   icon: Icon(Icons.push_pin),
                 ),
                 IconButton(
@@ -119,6 +138,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 IconButton(
                   onPressed: () {
+                    deleteAllSelected();
                     setState(() {
                       showSearch = true;
                     });
@@ -130,6 +150,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 PopupMenuButton<String>(
                   onSelected: (stage) {
+                    deleteAllSelected();
                     filterJobs(stage);
                   },
                   itemBuilder: (context) => [
@@ -164,9 +185,15 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.archive,
+                  onPressed: () {
+                    deleteAllSelected();
+                    setState(() {
+                      isArchive = !isArchive;
+                    });
+                    isArchive?jobData.fetchJobsArchive():jobData.fetchJobs();
+                  },
+                  icon: Icon(isArchive?
+                    Icons.unarchive:Icons.archive,
                     color: Colors.white,
                   ),
                 ),
