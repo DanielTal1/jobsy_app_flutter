@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobsy_app_flutter/graphs_page.dart';
 import 'package:jobsy_app_flutter/home_page.dart';
 import 'package:jobsy_app_flutter/recommend_page.dart';
 import 'package:jobsy_app_flutter/welcome_screen.dart';
@@ -29,13 +30,15 @@ class Jobsy extends StatelessWidget {
           ),
         ],
         child:MaterialApp(
-          initialRoute:Login.id,
+          initialRoute:HomePage.id,
           routes:{
             HomePage.id:(context)=>HomePage(),
             WelcomeScreen.id:(context)=>WelcomeScreen(),
             Login.id:(context)=> Login(),
             SignUpPage.id:(context)=>SignUpPage(),
             RecommendPage.id:(context)=>RecommendPage(),
+            MyChartPage.id:(context)=>MyChartPage(),
+
           },
         )
     );

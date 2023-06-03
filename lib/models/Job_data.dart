@@ -22,10 +22,11 @@ class JobData extends ChangeNotifier {
 
   Future<void> fetchJobs() async {
     _isLoading = true;
-    String? username=await UsernameData.getUsername();
-    if(username==null){
-      return;
-    }
+    // String? username=await UsernameData.getUsername();
+    // if(username==null){
+    //   return;
+    // }
+    final username='ravid';
     notifyListeners();
     try {
       final response = await http.get(

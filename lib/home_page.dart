@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobsy_app_flutter/graphs_page.dart';
 import 'package:jobsy_app_flutter/widgets/job_list.dart';
 import 'package:provider/provider.dart';
 import 'add_job_screen.dart';
@@ -71,8 +72,6 @@ class _HomePageState extends State<HomePage> {
   void  UpdateAPiCallback() async{
     final jobData = Provider.of<JobData>(context, listen: false);
     await jobData.fetchJobs();
-
-
   }
 
 
@@ -85,7 +84,9 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color(0xFFF9F5EB),
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,MaterialPageRoute(builder: (context)=>MyChartPage()));
+          },
           icon: Icon(Icons.menu),
         ),
         title: isArchive?Text('Jobsy|Archive'):Text('Jobsy'),
@@ -207,7 +208,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage, addSelectedCallback:addSelectedCallback, isJobSelected: isJobSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: !isArchive?FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -235,7 +236,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF126180),
-      ),
+      ):null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

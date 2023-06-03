@@ -21,6 +21,8 @@ dependencies:
   path_provider: ^2.0.14
   url_launcher: ^6.0.3
   flutter_secure_storage: ^8.0.0
+  fl_chart: ^0.62.0
+  flutter_svg: ^2.0.6
 
 
 
