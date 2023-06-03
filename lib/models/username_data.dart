@@ -18,8 +18,11 @@ class UsernameData{
   static Future<String?> getUsername() async {
     final storage = FlutterSecureStorage();
     try {
-      final username = await storage.read(key: 'username');
-      print('Username retrieved successfully');
+      String? username = await storage.read(key: 'username');
+      if (username==null){
+        username="null";
+      }
+      print('Username retrieved successfully'+username);
       return username;
     } catch (e) {
       print('Failed to retrieve username: $e');

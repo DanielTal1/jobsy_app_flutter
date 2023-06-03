@@ -41,6 +41,7 @@ class Job{
       'company_logo': company_logo,
       'archive': archive,
       'pin': pin,
+      'last_updated':last_updated,
     };
   }
 
