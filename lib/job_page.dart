@@ -11,7 +11,8 @@ import 'models/stage.dart';
 import 'package:http/http.dart' as http;
 class JobPage extends StatefulWidget {
   final Job currentJob;
-  JobPage({required this.currentJob});
+  final bool isArchive;
+  JobPage({required this.currentJob, required this.isArchive});
 
 
   @override
@@ -142,7 +143,7 @@ class _JobPageState extends State<JobPage> {
                                         setState(() {
                                           selected_stage=newValue;
                                         });
-                                        jobData.updateStageLocally(newValue, currentJob.id);
+                                        jobData.updateStageLocally(newValue, currentJob.id,widget.isArchive?jobData.archiveJobs:jobData.jobs);
                                         jobData.updateJob(newValue,currentJob.id);
                                       }
                                     },

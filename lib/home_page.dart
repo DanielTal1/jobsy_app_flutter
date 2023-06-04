@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     List<String> jobIds = selectedJobs.map((job) => job.id).toList();
                     deleteAllSelected();
-                    jobData.deleteJobsLocally(jobIds);
+                    jobData.deleteJobsLocally(jobIds,isArchive);
                     jobData.deleteJobs(jobIds);
                     },
                   icon: Icon(Icons.delete),
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () async {
                     List<String> jobIds = selectedJobs.map((job) => job.id).toList();
                     deleteAllSelected();
-                    jobData.deleteJobsLocally(jobIds);
+                    jobData.deleteJobsLocally(jobIds,isArchive);
                     jobData.updateArchive(jobIds);
                   },
                   icon: Icon(isArchive? Icons.unarchive:Icons.archive),
@@ -117,8 +117,8 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     List<String> jobIds = selectedJobs.map((job) => job.id).toList();
                     deleteAllSelected();
-                    jobData.updatePinsLocally(jobIds);
-                    jobData.sortJobs();
+                    jobData.updatePinsLocally(jobIds,isArchive?jobData.archiveJobs:jobData.jobs);
+                    jobData.sortJobs(isArchive?jobData.archiveJobs:jobData.jobs);
                     jobData.updatePins(jobIds);
                   },
                   icon: Icon(Icons.push_pin),
@@ -191,7 +191,6 @@ class _HomePageState extends State<HomePage> {
                     setState(() {
                       isArchive = !isArchive;
                     });
-                    isArchive?jobData.fetchJobsArchive():jobData.fetchJobs();
                   },
                   icon: Icon(isArchive?
                     Icons.unarchive:Icons.archive,
@@ -207,7 +206,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage, addSelectedCallback:addSelectedCallback, isJobSelected: isJobSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback),
+      body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage, addSelectedCallback:addSelectedCallback, isJobSelected: isJobSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback,isArchive:isArchive),
       floatingActionButton: !isArchive?FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(

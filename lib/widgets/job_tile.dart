@@ -10,11 +10,14 @@ class JobTile extends StatelessWidget {
   final Function removeSelectedCallback;
   final Function isSelectedListEmptyCallback;
   final Function isJobSelected;
-  JobTile({required this.currentJob, required this.addSelectedCallback, required this.removeSelectedCallback, required this.isSelectedListEmptyCallback, required  this.isJobSelected});
+  final bool isArchive;
+  JobTile({required this.currentJob, required this.addSelectedCallback,
+    required this.removeSelectedCallback, required this.isSelectedListEmptyCallback,
+    required this.isJobSelected, required this.isArchive});
 
   void onTapActions(context){
     if(isSelectedListEmptyCallback()){
-      Navigator.push(context,MaterialPageRoute(builder: (context)=>JobPage(currentJob: currentJob)));
+      Navigator.push(context,MaterialPageRoute(builder: (context)=>JobPage(currentJob: currentJob,isArchive:isArchive)));
     }
     else if (isJobSelected(currentJob)){
       removeSelectedCallback(currentJob);

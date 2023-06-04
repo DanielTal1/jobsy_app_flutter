@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jobsy_app_flutter/widgets/bar_chart.dart';
 import 'package:jobsy_app_flutter/widgets/pie_chart.dart';
 
 class MyChartPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class _MyChartPageState extends State<MyChartPage> {
         title: Text('Pie Chart Sample'),
       ),
       body: Center(
-        child: PieChartPage(),
+        child: BarChartByMonth(),
       ),
     );
   }

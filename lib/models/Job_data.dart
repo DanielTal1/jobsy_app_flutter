@@ -9,24 +9,27 @@ import 'job.dart';
 class JobData extends ChangeNotifier {
 
   List<Job> _jobs = [];
+  List<Job> _archiveJobs=[];
   bool _isLoading = false;
-
+  bool _isLoadingArcive = false;
   List<Job> get jobs => _jobs;
-
+  List<Job> get archiveJobs => _archiveJobs;
   bool get isLoading => _isLoading;
+  bool get isLoadingArchive => _isLoadingArcive;
+
 
   JobData() {
     fetchJobs();
+    fetchJobsArchive();
   }
 
 
   Future<void> fetchJobs() async {
     _isLoading = true;
-    // String? username=await UsernameData.getUsername();
-    // if(username==null){
-    //   return;
-    // }
-    final username='ravid';
+    String? username=await UsernameData.getUsername();
+    if(username==null){
+      return;
+    }
     notifyListeners();
     try {
       final response = await http.get(
@@ -44,7 +47,7 @@ class JobData extends ChangeNotifier {
 
 
   Future<void> fetchJobsArchive() async {
-    _isLoading = true;
+    _isLoadingArcive = true;
     String? username=await UsernameData.getUsername();
     if(username==null){
       return;
@@ -54,11 +57,11 @@ class JobData extends ChangeNotifier {
       final response = await http.get(
           Uri.parse('http://10.0.2.2:3000/jobs/archive/'+username));
       final jsonData = json.decode(response.body) as List<dynamic>;
-      _jobs = jsonData.map((jobData) => Job.fromJson(jobData)).toList();
-      _isLoading = false;
+      _archiveJobs = jsonData.map((jobData) => Job.fromJson(jobData)).toList();
+      _isLoadingArcive = false;
       notifyListeners();
     } catch (error) {
-      _isLoading = false;
+      _isLoadingArcive = false;
       notifyListeners();
       throw error;
     }
@@ -82,16 +85,25 @@ class JobData extends ChangeNotifier {
     }
   }
 
-  void deleteJobsLocally(List<String> jobIds) {
+  void deleteJobsLocally(List<String> jobIds,bool isArchive) {
+    final listJobsToAdd=isArchive?jobs:archiveJobs;
+    final listJobsToDelete=isArchive?archiveJobs:jobs;
     for (String jobId in jobIds) {
-      jobs.removeWhere((job) => job.id == jobId);
+      listJobsToDelete.removeWhere((job) {
+        if (job.id == jobId) {
+          listJobsToAdd.add(job); // Add the job to listJobsToAdd
+          return true; // Remove the job from listJobsToDelete
+        }
+        return false;
+      });
     }
+    sortJobs(listJobsToAdd);
     notifyListeners();
   }
 
-  void updatePinsLocally(List<String> jobIds){
+  void updatePinsLocally(List<String> jobIds,List<Job> listJobs){
     for (String jobId in jobIds) {
-      Job job=jobs.firstWhere((job) => job.id == jobId);
+      Job job=listJobs.firstWhere((job) => job.id == jobId);
       job.pin = !job.pin;
     }
     notifyListeners();
@@ -115,8 +127,8 @@ class JobData extends ChangeNotifier {
   }
 
 
-  void sortJobs() {
-    jobs.sort((a, b) {
+  void sortJobs(List<Job> listJobs) {
+    listJobs.sort((a, b) {
       if (a.pin == b.pin) {
         // If the pins are the same, sort by last_updated in descending order
         return b.last_updated.compareTo(a.last_updated);
@@ -172,12 +184,22 @@ class JobData extends ChangeNotifier {
 
 
 
-  void updateStageLocally(newStage,JobId){
-     Job job=jobs.firstWhere((job) => job.id == JobId);
+  void updateStageLocally(newStage,JobId,List<Job> listJobs){
+     Job job=listJobs.firstWhere((job) => job.id == JobId);
      job.interview_stage = newStage;
      job.last_updated=DateTime.now();
      notifyListeners();
-     sortJobs();
+     sortJobs(listJobs);
   }
+
+
+
+
+
+
+
+
+
+
 
 }

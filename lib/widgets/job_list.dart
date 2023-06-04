@@ -11,6 +11,7 @@ class JobList extends StatefulWidget {
   final Function isJobSelected;
   final Function removeSelectedCallback;
   final Function isSelectedListEmptyCallback;
+  final bool isArchive;
 
   const JobList({
     Key? key,
@@ -20,6 +21,7 @@ class JobList extends StatefulWidget {
     required this.isJobSelected,
     required this.removeSelectedCallback,
     required this.isSelectedListEmptyCallback,
+    required this.isArchive,
   }) : super(key: key);
 
   @override
@@ -59,24 +61,49 @@ class _JobListState extends State<JobList> {
   @override
   Widget build(BuildContext context) {
     final jobProvider = Provider.of<JobData>(context);
-    final shownJobs = jobProvider.jobs
-        .where((job) => jobCheck(searchedQuery, job))
-        .toList();
+    final shownJobs;
+    if(!widget.isArchive){
+      shownJobs = jobProvider.jobs
+          .where((job) => jobCheck(searchedQuery, job))
+          .toList();
+      return jobProvider.isLoadingArchive
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        itemBuilder: (context, index) {
+          final currentJob = shownJobs[index];
+          final isSelected = isJobSelected(currentJob);
 
-    return jobProvider.isLoading
-        ? Center(child: CircularProgressIndicator())
-        : ListView.builder(
-      itemBuilder: (context, index) {
-        final currentJob = shownJobs[index];
-        final isSelected = isJobSelected(currentJob);
+          return Container(
+            color: isSelected ? Colors.blueGrey : Colors.transparent,
+            child: JobTile(currentJob: currentJob,
+              addSelectedCallback:addSelectedCallback,
+              removeSelectedCallback:removeSelectedCallback,
+              isSelectedListEmptyCallback:isSelectedListEmptyCallback,
+              isJobSelected:isJobSelected, isArchive: widget.isArchive,),
+          );
+        },
+        itemCount: shownJobs.length,
+      );
+    }
+    else{
+      shownJobs = jobProvider.archiveJobs
+          .where((job) => jobCheck(searchedQuery, job))
+          .toList();
+      return jobProvider.isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        itemBuilder: (context, index) {
+          final currentJob = shownJobs[index];
+          final isSelected = isJobSelected(currentJob);
 
-        return Container(
-          color: isSelected ? Colors.blueGrey : Colors.transparent,
-          child: JobTile(currentJob: currentJob,addSelectedCallback:addSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback,isJobSelected:isJobSelected),
-        );
-      },
-      itemCount: shownJobs.length,
-    );
+          return Container(
+            color: isSelected ? Colors.blueGrey : Colors.transparent,
+            child: JobTile(currentJob: currentJob,addSelectedCallback:addSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback,isJobSelected:isJobSelected,isArchive:widget.isArchive),
+          );
+        },
+        itemCount: shownJobs.length,
+      );
+    }
   }
 
   @override

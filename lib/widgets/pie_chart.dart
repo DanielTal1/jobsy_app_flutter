@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 
 import '../models/Job_data.dart';
+import '../models/job.dart';
 import '../models/stage.dart';
 import '../models/stage_data.dart';
 
@@ -16,7 +17,8 @@ class _PieChartPageState extends State<PieChartPage> {
 
   List<PieChartSectionData> getSections() {
     final JobProvider = Provider.of<JobData>(context, listen: false);
-    List<StageData> chartData = StageData.prepareChartData(JobProvider.jobs);
+    List<Job> allJobs = [...JobProvider.jobs, ...JobProvider.archiveJobs];
+    List<StageData> chartData = StageData.prepareChartData(allJobs);
 
     int totalCount = 0;
     for (final stageData in chartData) {
