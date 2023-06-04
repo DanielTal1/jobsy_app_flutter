@@ -81,7 +81,6 @@ class _HomePageState extends State<HomePage> {
     final jobData = Provider.of<JobData>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xFFF9F5EB),
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {

@@ -9,14 +9,46 @@ class MyChartPage extends StatefulWidget {
 }
 
 class _MyChartPageState extends State<MyChartPage> {
+  bool isPie=true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pie Chart Sample'),
+        title: Text('Graphs'),
+        backgroundColor: const Color(0xFF126180),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(40.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                width: 100, // Adjust the width as needed
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isPie = true;
+                    });
+                  },
+                  icon: Text("Stage",style: TextStyle(fontSize: 16),),
+                ),
+              ),
+              Container(
+                width: 100, // Adjust the width as needed
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isPie = false;
+                    });
+                  },
+                  icon: Text("Month",style: TextStyle(fontSize: 16),),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      body: Center(
-        child: BarChartByMonth(),
+        body: Center(
+        child: isPie?PieChartPage():BarChartByMonth(),
       ),
     );
   }

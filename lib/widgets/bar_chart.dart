@@ -20,6 +20,7 @@ class BarChartByMonth extends StatefulWidget {
 
 class _BarChartByMonth extends State<BarChartByMonth> {
   List<_BarData> jobCountMap = [];
+  int maxCount=0;
 
   @override
   void initState() {
@@ -78,7 +79,15 @@ class _BarChartByMonth extends State<BarChartByMonth> {
   int touchedGroupIndex = -1;
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Column(children:[
+      Padding(
+        padding: EdgeInsets.only(top: 30,bottom: 30), // Adjust the top padding as needed
+        child: Text(
+          "Applied jobs by month",
+          style: TextStyle(fontSize: 25),
+        ),
+      ),
+        Padding(
       padding: const EdgeInsets.all(24),
       child: AspectRatio(
         aspectRatio: 1.4,
@@ -141,7 +150,7 @@ class _BarChartByMonth extends State<BarChartByMonth> {
                 data.color, // Use your desired color here
               );
             }).toList(),
-            maxY: 30,
+            maxY: (jobCountMap.reduce((a, b) => a.count > b.count ? a : b).count).toDouble()<5?10:20,
             barTouchData: BarTouchData(
               enabled: true,
               handleBuiltInTouches: false,
@@ -187,7 +196,8 @@ class _BarChartByMonth extends State<BarChartByMonth> {
           ),
         ),
       ),
-    );
+    )
+    ]);
   }
 
 }

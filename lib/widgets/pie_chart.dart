@@ -80,7 +80,15 @@ class _PieChartPageState extends State<PieChartPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: AspectRatio(
+      child:Column(children: [
+        Padding(
+          padding: EdgeInsets.only(top: 30), // Adjust the top padding as needed
+          child: Text(
+            "The Jobs Stages",
+            style: TextStyle(fontSize: 25),
+          ),
+        ),
+        AspectRatio(
         aspectRatio: 1,
         child: PieChart(
           PieChartData(
@@ -101,6 +109,7 @@ class _PieChartPageState extends State<PieChartPage> {
           ),
         ),
       ),
+    ])
     );
   }
 }
