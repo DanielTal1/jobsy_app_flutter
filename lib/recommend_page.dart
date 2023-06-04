@@ -14,14 +14,8 @@ class _RecommendPageState extends State<RecommendPage> {
     return Scaffold(resizeToAvoidBottomInset : false,
         backgroundColor: Color(0xFFF9F5EB),
         appBar: AppBar(
-            leading: IconButton(onPressed: (){},
-                icon:Icon(Icons.menu)),
-            title:Text('Jobsy'),
+            title:Text('Recommendations'),
             backgroundColor:const Color(0xFF126180),
-            actions: [
-              IconButton(onPressed: (){},
-                  icon:Icon(Icons.more_vert))
-            ],
         ),
         body:RecommendList()
     );

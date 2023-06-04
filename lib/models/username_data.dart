@@ -31,4 +31,11 @@ class UsernameData{
     }
   }
 
+  static Future<void> deleteUsernameData() async {
+    final storage = FlutterSecureStorage();
+    await storage.delete(key: 'username');
+  }
+
+
+
 }

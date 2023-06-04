@@ -18,9 +18,16 @@ class JobData extends ChangeNotifier {
   bool get isLoadingArchive => _isLoadingArcive;
 
 
-  JobData() {
+
+
+  void JobDataInitialize() {
     fetchJobs();
     fetchJobsArchive();
+  }
+
+  void JobDataExit(){
+    _jobs.clear();
+    _archiveJobs.clear();
   }
 
 

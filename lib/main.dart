@@ -30,7 +30,7 @@ class Jobsy extends StatelessWidget {
           ),
         ],
         child:MaterialApp(
-          initialRoute:HomePage.id,
+          initialRoute:Login.id,
           routes:{
             HomePage.id:(context)=>HomePage(),
             WelcomeScreen.id:(context)=>WelcomeScreen(),

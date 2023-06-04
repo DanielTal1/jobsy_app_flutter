@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jobsy_app_flutter/graphs_page.dart';
+import 'package:jobsy_app_flutter/models/username_data.dart';
+import 'package:jobsy_app_flutter/recommend_page.dart';
 import 'package:jobsy_app_flutter/widgets/job_list.dart';
 import 'package:provider/provider.dart';
 import 'add_job_screen.dart';
@@ -76,17 +78,23 @@ class _HomePageState extends State<HomePage> {
 
 
 
+
   @override
   Widget build(BuildContext context) {
-    final jobData = Provider.of<JobData>(context);
+    final jobData = Provider.of<JobData>(context,listen: false);
+    jobData.JobDataInitialize();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(context,MaterialPageRoute(builder: (context)=>MyChartPage()));
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
           },
-          icon: Icon(Icons.menu),
         ),
         title: isArchive?Text('Jobsy|Archive'):Text('Jobsy'),
         backgroundColor: const Color(0xFF126180),
@@ -205,6 +213,54 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      drawer:Align(
+        alignment: Alignment.topLeft,child:
+      SizedBox(height:310,width: 200,child:Drawer(child: Column(
+      children: [
+      Padding(
+      padding: const EdgeInsets.only(top: 40.0,bottom:20),
+        child: Text(
+          'Menu',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+        Expanded(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          children: [
+            ListTile(
+              title: Text('Graphs'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>MyChartPage()));
+              },
+            ),
+            ListTile(
+              title: Text('Recomendations'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>RecommendPage()));
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 40.0),
+              child: ListTile(
+                title: Text('Log Out'),
+                onTap: () {
+                  UsernameData.deleteUsernameData();
+                  jobData.JobDataExit();
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  // Handle onTap event for "Log Out" ListTile
+                },
+              ),
+            ),
+          ],
+        )
+      ),
+    ])
+      ))),
       body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage, addSelectedCallback:addSelectedCallback, isJobSelected: isJobSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback,isArchive:isArchive),
       floatingActionButton: !isArchive?FloatingActionButton(
         onPressed: () {
