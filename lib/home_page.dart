@@ -76,13 +76,19 @@ class _HomePageState extends State<HomePage> {
     await jobData.fetchJobs();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    final jobData = Provider.of<JobData>(context,listen: false);
+    jobData.JobDataInitialize();
+  }
+
 
 
 
   @override
   Widget build(BuildContext context) {
     final jobData = Provider.of<JobData>(context,listen: false);
-    jobData.JobDataInitialize();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
