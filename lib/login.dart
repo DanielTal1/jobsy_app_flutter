@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:jobsy_app_flutter/models/username_data.dart';
@@ -21,6 +22,10 @@ class _Login extends State<Login> {
 
 
   Future<bool> checkLogin() async {
+    String? token=await UsernameData.getToken();
+    if(token==null){
+      token="";
+    }
     http.Response response=await http.post(
       Uri.parse('http://10.0.2.2:3000/auth/login'),
       headers: <String, String>{
@@ -28,7 +33,8 @@ class _Login extends State<Login> {
       },
       body: jsonEncode(<String, String>{
         'username': _usernameController.text,
-        'password': _passwordController.text
+        'password': _passwordController.text,
+        'token':token
       }),
     );
     var message= jsonDecode(response.body)['message'];
@@ -119,6 +125,7 @@ class _Login extends State<Login> {
                       if (_formKey.currentState!.validate()) {
                         if(await checkLogin()){
                           await UsernameData.saveUsername(_usernameController.text);
+                          await FirebaseMessaging.instance.subscribeToTopic('notifications');
                           Navigator.pushNamed(context, HomePage.id);
                         }
                         else{

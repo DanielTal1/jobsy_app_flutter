@@ -37,13 +37,14 @@ class _AddJobScreenState extends State<AddJobScreen> {
     if(username==null){
       return;
     }
-    final url = Uri.parse('http://10.0.2.2:3000/jobs'); // Change the URL accordingly for Android emulator
+    final url = Uri.parse('http://10.0.2.2:3000/jobs');
     final body = json.encode({
       "username": username,
       "company":addedCompany ,
       "role": addedRole,
       "location": addedLocation,
-      "url":""
+      "url":"",
+      "source":"",
     });
 
     try {

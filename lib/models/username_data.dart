@@ -31,9 +31,38 @@ class UsernameData{
     }
   }
 
+
   static Future<void> deleteUsernameData() async {
     final storage = FlutterSecureStorage();
     await storage.delete(key: 'username');
+  }
+
+
+  static Future<void> saveToken(String token) async {
+    final storage = FlutterSecureStorage();
+    try {
+      await storage.write(key: 'token', value: token);
+      print('Token saved successfully'+token);
+    } catch (e) {
+      print('Failed to save username: $e');
+      // Handle the exception accordingly
+    }
+  }
+
+  static Future<String?> getToken() async {
+    final storage = FlutterSecureStorage();
+    try {
+      String? token = await storage.read(key: 'token');
+      if (token==null){
+        token="null";
+      }
+      print('Tokenravid retrieved successfully'+token);
+      return token;
+    } catch (e) {
+      print('Failed to retrieve username: $e');
+      // Handle the exception accordingly
+      return null; // Return a default value or handle the error case
+    }
   }
 
 

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:jobsy_app_flutter/graphs_page.dart';
 import 'package:jobsy_app_flutter/models/username_data.dart';
@@ -81,6 +82,16 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     final jobData = Provider.of<JobData>(context,listen: false);
     jobData.JobDataInitialize();
+    // Configure the message handling
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Received message: ${message.notification?.title}');
+      // Handle the received message as needed
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Message opened from terminated state: ${message.notification?.title}');
+      // Handle the opened message from terminated state as needed
+    });
   }
 
 

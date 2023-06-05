@@ -10,9 +10,20 @@ import 'package:provider/provider.dart';
 import 'models/Job_data.dart';
 import 'models/comment_data.dart';
 import 'models/recommendation_data.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
+import 'models/username_data.dart';
 
-void main() => runApp(Jobsy());
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  String? token = await FirebaseMessaging.instance.getToken();
+  print('FCM Token: $token');
+  await UsernameData.saveToken(token!);
+  runApp(Jobsy());
+}
 
 class Jobsy extends StatelessWidget {
   @override
