@@ -9,6 +9,8 @@ import 'models/company.dart';
 import 'models/job.dart';
 import 'models/stage.dart';
 import 'package:http/http.dart' as http;
+
+import 'models/url_data.dart';
 class JobPage extends StatefulWidget {
   final Job currentJob;
   final bool isArchive;
@@ -70,15 +72,21 @@ class _JobPageState extends State<JobPage> {
                 padding: const EdgeInsets.all(20),
                 child: Row(children: [
                   ClipRRect(// Image border
-                      child: currentJob.company_logo==""?Image.asset('images/company.png',fit: BoxFit.fill,height:100):Image.network(currentJob.company_logo, fit: BoxFit.fill),
+                      child: currentJob.company_logo==""?Image.asset('images/company.png',fit: BoxFit.fill,height:100,width:100):Image.network(currentJob.company_logo, fit: BoxFit.fill,height:100,width:100),
                       borderRadius: BorderRadius.circular(15)
                   ),
                   SizedBox(width: 20.0),
-                  currentJob.company.length>30? Text(currentJob.company,style: TextStyle(fontSize: 25)):
-                  FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child:Text(currentJob.company,style: TextStyle(fontSize: 35))
-                       ),
+                  Expanded(
+                      child:Container(
+                            child:Padding(
+                                padding: const EdgeInsets.all(5),
+                                child:Center(child: Text(currentJob.company ,style: TextStyle(fontSize: 30),textAlign: TextAlign.left))
+                            )
+                      )
+                  ),
+
+
+
                 ])
                    )
               ),
@@ -103,7 +111,7 @@ class _JobPageState extends State<JobPage> {
                           elevation:20,
                           child:Padding(
                               padding: const EdgeInsets.all(20),
-                              child:Center(child: Text(currentJob.role ,style: TextStyle(fontSize: 15),textAlign: TextAlign.left))
+                              child:Center(child: Text(currentJob.role ,style: TextStyle(fontSize: 20),textAlign: TextAlign.left))
                           )
                       ),
                     )
@@ -123,6 +131,45 @@ class _JobPageState extends State<JobPage> {
 
               ],)
               ),
+              if(currentJob.url!="")IntrinsicHeight(child:
+              Row(crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(flex:1,
+                      child:Container(
+                          child: Card(
+                              color: const Color(0xFFFFF5EE),
+                              elevation:20,
+                              child:Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child:Center(child: TextButton(
+                                    onPressed: () {
+                                      UrlData.launchUrlFun(currentJob.url,context);
+                                    },
+                                    child: Text('Job link',style: TextStyle(fontSize: 20)),
+                                  ))
+                              )
+
+                          )
+                      ),
+                  ),
+                  Expanded(flex:1,
+                      child:Container(
+                        child: Card(
+                            color: const Color(0xFFFFF5EE),
+                            elevation:20,
+                            child:Padding(
+                                padding: const EdgeInsets.all(20),
+                                child:Center(child: Text('last update: '+currentJob.updatedAt ,style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
+                            )
+                        ),
+                      )
+                  ),
+
+                ],)
+              ),
+
+
+
               Container(
                 child: Card(
                     color: const Color(0xFFFFF5EE),

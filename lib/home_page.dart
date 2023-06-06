@@ -80,10 +80,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    final jobData = Provider.of<JobData>(context,listen: false);
-    jobData.JobDataInitialize();
+    final jobProvider = Provider.of<JobData>(context,listen: false);
+    jobProvider.JobDataInitialize();
     // Configure the message handling
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final jobProvider = Provider.of<JobData>(context,listen: false);
+      jobProvider.fetchJobs();
       print('Received message: ${message.notification?.title}');
       // Handle the received message as needed
     });

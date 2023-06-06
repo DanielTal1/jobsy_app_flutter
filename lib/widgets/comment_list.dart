@@ -19,12 +19,16 @@ class CommentList extends StatefulWidget {
 class _CommentListState extends State<CommentList> {
 
 
+  void initState() {
+    super.initState();
+    final CommentProvider = Provider.of<CommentData>(context, listen: false);
+    CommentProvider.fetchComments(widget.currentCompany);
+  }
 
 
   @override
   Widget build(BuildContext context) {
     final commentProvider = Provider.of<CommentData>(context);
-    commentProvider.fetchComments(widget.currentCompany);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

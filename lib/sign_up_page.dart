@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'login.dart';
+
 class SignUpPage extends StatefulWidget {
   static const String id='sign_up_page';
   const SignUpPage({super.key});
@@ -54,11 +53,12 @@ class _SignUpPageState extends State<SignUpPage> {
         backgroundColor:const Color(0xFF72A0C1),
         title: Text('Jobsy'),
       ),
-      body: Form(
-        key: _formKey,
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Column(
+          padding: const EdgeInsets.fromLTRB(20, 50, 20, 50),
+          child:Center(child:Form(
+          key: _formKey,
+            child:Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
@@ -156,7 +156,9 @@ class _SignUpPageState extends State<SignUpPage> {
             ],
           ),
         ),
-      ),
+      )
+        ),
+    )
     );
   }
 }

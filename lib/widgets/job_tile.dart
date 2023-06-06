@@ -37,7 +37,9 @@ class JobTile extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return  ListTile(
+    return  Column(children: [
+      SizedBox(height: 6,),
+      ListTile(
       title:Text(currentJob.role),
       trailing:Container(child:Row(children: [
         Column(
@@ -48,14 +50,30 @@ class JobTile extends StatelessWidget {
           ],
         ),
       ]),width:130.0),
-      subtitle: Text(currentJob.company+" , "+currentJob.location),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(currentJob.company),
+          Text(currentJob.location),
+          SizedBox(height: 10,)
+        ],
+      ),
       leading:ClipRRect(
         borderRadius: BorderRadius.circular(8), // Image border
-        child: currentJob.company_logo==""?Image.asset('images/company.png',fit: BoxFit.cover,height: 50.0):Image.network(currentJob.company_logo, fit: BoxFit.cover,height: 50.0),
+        child: currentJob.company_logo==""?
+        Image.asset('images/company.png',fit: BoxFit.cover,height: 55.0,width: 55,):
+        Image.network(currentJob.company_logo, fit: BoxFit.cover,height: 55.0,width:55),
       ),
       onTap:()=> onTapActions(context),
       onLongPress:()=>onLongPressActions(context) ,
-    );
+    ),Divider(
+    height: 1,
+    color: Colors.grey,
+    ),
+      SizedBox(height:6,)
+    ]
+    )
+    ;
   }
 }
 
