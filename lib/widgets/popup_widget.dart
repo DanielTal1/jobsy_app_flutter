@@ -64,6 +64,7 @@ class PopupWidget {
                       ),
                     ],
                   ),
+                  if(selected_stage!="Offer")
                   Row(
                     children: <Widget>[
                       Image.asset(
