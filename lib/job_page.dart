@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jobsy_app_flutter/add_job_screen.dart';
 import 'package:jobsy_app_flutter/widgets/comment_list.dart';
+import 'package:jobsy_app_flutter/widgets/popup_widget.dart';
 import 'package:provider/provider.dart';
-
+import 'package:intl/intl.dart';
+import 'add_comment_screen.dart';
 import 'models/Job_data.dart';
 import 'models/company.dart';
 import 'models/job.dart';
@@ -26,6 +29,16 @@ class _JobPageState extends State<JobPage> {
   _JobPageState({required this.currentJob});
   late Company currentCompany;
   late String selected_stage=currentJob.interview_stage;
+  late bool isPopup=false;
+
+
+  void updateInterviewCallBack(DateTime next_interview){
+    setState(() {
+      currentJob.next_interview=next_interview;
+    });
+
+
+  }
 
   Future<void> fetchCompany(String companyName) async {
     try {
@@ -54,7 +67,6 @@ class _JobPageState extends State<JobPage> {
   }
 
   Widget build(BuildContext context) {
-    final jobData = Provider.of<JobData>(context, listen: false);
     return Scaffold(resizeToAvoidBottomInset : false,
         appBar: AppBar(
             title:Text('Jobsy'),
@@ -157,7 +169,7 @@ class _JobPageState extends State<JobPage> {
                         child: Card(
                             color: const Color(0xFFFFF5EE),
                             elevation:20,
-                            child:Padding(
+                             child:Padding(
                                 padding: const EdgeInsets.all(20),
                                 child:Center(child: Text('last update: '+currentJob.updatedAt ,style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
                             )
@@ -187,11 +199,13 @@ class _JobPageState extends State<JobPage> {
                                     value: selected_stage,
                                     onChanged: (newValue) async {
                                       if(newValue!=null){
+                                        if(selected_stage!=newValue){
+                                          PopupWidget.openPopup(context,newValue,currentJob,widget.isArchive,updateInterviewCallBack);
+                                        }
                                         setState(() {
                                           selected_stage=newValue;
+
                                         });
-                                        jobData.updateStageLocally(newValue, currentJob.id,widget.isArchive?jobData.archiveJobs:jobData.jobs);
-                                        jobData.updateJob(newValue,currentJob.id);
                                       }
                                     },
                                     items: stagesList.map((stageItem){
@@ -218,8 +232,18 @@ class _JobPageState extends State<JobPage> {
                 ),
               )
               ),
+              if(currentJob.next_interview.isAfter(DateTime.now()))
+                Card(
+                  color:const Color(0xFFFFF5EE),
+                  elevation:20,
+                  child:Padding(
+                      padding: const EdgeInsets.all(20),
+                      child:Center(child: Text('next interview: '+DateFormat('dd/MM/yy').format(currentJob.next_interview),style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
+                  ),
+                ),
               Card(
                 color:const Color(0xFFFFF5EE),
+                elevation:20,
                 child:CommentList(currentCompany: currentJob.company),
               )
 

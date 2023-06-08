@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:jobsy_app_flutter/graphs_page.dart';
 import 'package:jobsy_app_flutter/home_page.dart';
 import 'package:jobsy_app_flutter/recommend_page.dart';
@@ -16,7 +17,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'models/username_data.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   String? token = await FirebaseMessaging.instance.getToken();

@@ -168,13 +168,13 @@ class JobData extends ChangeNotifier {
 
 
 
-  Future<void> updateJob( String newStage,String jobId) async {
+  Future<void> updateJob( String newStage,String jobId,DateTime interviewDate) async {
     final url = Uri.parse('http://10.0.2.2:3000/jobs/'+jobId);
 
     try {
       final response =await http.put(url,
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'stage': newStage}),
+        body: json.encode({'stage': newStage,'next_interview':interviewDate.toIso8601String()}),
       );
       if (response.statusCode == 200) {
         print('Job updated successfully');
@@ -191,12 +191,13 @@ class JobData extends ChangeNotifier {
 
 
 
-  void updateStageLocally(newStage,JobId,List<Job> listJobs){
+  void updateStageLocally(newStage,JobId,List<Job> listJobs,DateTime interviewDate){
      Job job=listJobs.firstWhere((job) => job.id == JobId);
      job.interview_stage = newStage;
      job.last_updated=DateTime.now();
-     notifyListeners();
+     job.next_interview=interviewDate;
      sortJobs(listJobs);
+     notifyListeners();
   }
 
 

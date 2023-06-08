@@ -77,6 +77,11 @@ class _HomePageState extends State<HomePage> {
     await jobData.fetchJobs();
   }
 
+
+
+
+
+
   @override
   void initState() {
     super.initState();
