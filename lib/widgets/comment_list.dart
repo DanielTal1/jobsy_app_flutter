@@ -10,25 +10,33 @@ import 'dart:convert';
 
 class CommentList extends StatefulWidget {
   final String currentCompany;
+
   CommentList({required this.currentCompany});
 
   @override
-  State<CommentList> createState() => _CommentListState();
+  _CommentListState createState() => _CommentListState();
 }
 
 class _CommentListState extends State<CommentList> {
+  CommentData? commentProvider;
+  List<Comment> comments = [];
 
-
+  @override
   void initState() {
     super.initState();
-    final CommentProvider = Provider.of<CommentData>(context, listen: false);
-    CommentProvider.fetchComments(widget.currentCompany);
+    commentProvider = Provider.of<CommentData>(context, listen: false);
+    comments = commentProvider!.comments;
+    commentProvider!.fetchComments(widget.currentCompany);
   }
 
+  @override
+  void dispose() {
+    commentProvider?.disposeComments();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final commentProvider = Provider.of<CommentData>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,7 +44,7 @@ class _CommentListState extends State<CommentList> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '   Comments (${commentProvider.comments.length})',
+              '   Comments (${comments.length})',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Align(
@@ -60,7 +68,8 @@ class _CommentListState extends State<CommentList> {
                                 topRight: Radius.circular(20.0),
                               ),
                             ),
-                            child: AddCommentScreen(currentCompany:widget.currentCompany),
+                            child: AddCommentScreen(
+                                currentCompany: widget.currentCompany),
                           ),
                         ),
                       ),
@@ -73,19 +82,22 @@ class _CommentListState extends State<CommentList> {
           ],
         ),
         SizedBox(height: 10),
-        Stack(
-          children: [
-            Container(
-              height: 250, // Set a fixed height for the comment section
-              child: ListView.builder(
-                itemCount: commentProvider.comments.length,
-                itemBuilder: (context, index) {
-                  return CommentTile(currentComment: commentProvider.comments[index]);
-                },
+        if (comments.isNotEmpty)
+          Stack(
+            children: [
+              Container(
+                height: 300,
+                child: ListView.builder(
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    return CommentTile(currentComment: comments[index]);
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        if (comments.isEmpty)
+          Center(child: Text('No comments available')),
       ],
     );
   }

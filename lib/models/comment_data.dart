@@ -80,5 +80,9 @@ class CommentData extends ChangeNotifier{
 
   }
 
+  void disposeComments(){
+    _comments=[];
+  }
+
 
 }

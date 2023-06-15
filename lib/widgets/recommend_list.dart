@@ -15,8 +15,6 @@ class _RecommendListState extends State<RecommendList> {
 
   @override
   Widget build(BuildContext context) {
-
-
     final recommendProvider = Provider.of<RecommendationData>(context);
     final recommendations_list = recommendProvider.recommendations;
 

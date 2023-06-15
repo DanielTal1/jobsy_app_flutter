@@ -18,7 +18,7 @@ class RecommendTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(8), // Image border
         child: currentRecommend.company_logo==""?Image.asset('images/company.png',fit: BoxFit.cover,height: 50.0,width:50):Image.network(currentRecommend.company_logo, fit: BoxFit.cover,height: 50.0,width:50),
       ),
-      onTap:()=>currentRecommend.url!=""?UrlData.launchUrlFun("https://www.mako.co.il/",context):null
+      onTap:()=>currentRecommend.url!=""?UrlData.launchUrlFun(currentRecommend.url,context):null
       );
   }
 }

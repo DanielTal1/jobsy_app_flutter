@@ -79,6 +79,8 @@ class _BarChartByMonth extends State<BarChartByMonth> {
   int touchedGroupIndex = -1;
   @override
   Widget build(BuildContext context) {
+    int maxCount = jobCountMap.fold(0, (max, data) => math.max(max, data.count));
+    double maxY = maxCount < 5 ? 10 : (maxCount < 19 ? 20 : maxCount + 5);
     return Column(children:[
       Padding(
         padding: EdgeInsets.only(top: 30,bottom: 30), // Adjust the top padding as needed
@@ -150,7 +152,7 @@ class _BarChartByMonth extends State<BarChartByMonth> {
                 data.color, // Use your desired color here
               );
             }).toList(),
-            maxY: (jobCountMap.reduce((a, b) => a.count > b.count ? a : b).count).toDouble()<5?10:20,
+            maxY: maxY,
             barTouchData: BarTouchData(
               enabled: true,
               handleBuiltInTouches: false,

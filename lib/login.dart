@@ -126,6 +126,8 @@ class _Login extends State<Login> {
                         if(await checkLogin()){
                           await UsernameData.saveUsername(_usernameController.text);
                           await FirebaseMessaging.instance.subscribeToTopic('notifications');
+                          _usernameController.clear();
+                          _passwordController.clear();
                           Navigator.pushNamed(context, HomePage.id);
                         }
                         else{

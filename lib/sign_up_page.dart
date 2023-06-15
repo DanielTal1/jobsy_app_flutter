@@ -136,6 +136,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       loginError="";
                       if (_formKey.currentState!.validate()) {
                         if(await checkRegister()){
+                          _usernameController.clear();
+                          _passwordController.clear();
+                          _confirmPasswordController.clear();
                           Navigator.pushNamed(context, Login.id);
                         }
                         else{

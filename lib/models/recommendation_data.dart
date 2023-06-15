@@ -13,9 +13,7 @@ class RecommendationData extends ChangeNotifier{
   List<Recommendation> get recommendations => _recommendation;
   bool get isLoading => _isLoading;
 
-  RecommendationData() {
-    fetchJobs();
-  }
+
 
   Future<void> fetchJobs() async {
     _isLoading = true;
