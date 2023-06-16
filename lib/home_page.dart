@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'add_job_screen.dart';
 import 'models/Job_data.dart';
 import 'models/job.dart';
+import 'models/stage.dart';
 import 'search_jobs.dart';
 
 class HomePage extends StatefulWidget {
@@ -139,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () async {
                     List<String> jobIds = selectedJobs.map((job) => job.id).toList();
                     deleteAllSelected();
-                    jobData.deleteJobsLocally(jobIds,isArchive);
+                    jobData.archiveJobsLocally(jobIds,isArchive);
                     jobData.updateArchive(jobIds);
                   },
                   icon: Icon(isArchive? Icons.unarchive:Icons.archive),
@@ -182,40 +183,50 @@ class _HomePageState extends State<HomePage> {
                 ),
                 PopupMenuButton<String>(
                   onSelected: (stage) {
-                    deleteAllSelected();
-                    filterJobs(stage);
+                      deleteAllSelected();
+                      filterJobs(stage);
                   },
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: '',
-                      child: Text('All'),
-                    ),
-                    PopupMenuItem(
-                      value: 'apply',
-                      child: Text('Apply'),
-                    ),
-                    PopupMenuItem(
-                      value: 'hr interview',
-                      child: Text('HR Interview'),
-                    ),
-                    PopupMenuItem(
-                      value: '1st interview',
-                      child: Text('1st Interview'),
-                    ),
-                    PopupMenuItem(
-                      value: '2nd interview',
-                      child: Text('2nd Interview'),
-                    ),
-                    PopupMenuItem(
-                      value: 'Offer',
-                      child: Text('Offer'),
-                    ),
-                  ],
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem<String>(
+                        value: '',
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'images/all.png',
+                              width: 24, // Adjust the width as needed
+                              height: 24, // Adjust the height as needed
+                            ),
+                            SizedBox(width: 8),
+                            Text('all'),
+                          ],
+                        ),
+                      ),
+                      ...stagesList.map<PopupMenuItem<String>>((stage) {
+                        return PopupMenuItem<String>(
+                          value: stage['name'],
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                stage['image'],
+                                width: 24, // Adjust the width as needed
+                                height: 24, // Adjust the height as needed
+                              ),
+                              SizedBox(width: 8),
+                              Text(stage['name']),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ];
+                  },
                   child: Icon(
                     Icons.filter_alt_outlined,
                     color: Colors.white,
                   ),
                 ),
+
+
                 IconButton(
                   onPressed: () {
                     deleteAllSelected();
@@ -239,52 +250,60 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer:Align(
         alignment: Alignment.topLeft,child:
-      SizedBox(height:310,width: 200,child:Drawer(child: Column(
-      children: [
-      Padding(
-      padding: const EdgeInsets.only(top: 40.0,bottom:20),
-        child: Text(
-          'Menu',
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
-        Expanded(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
+      SizedBox(height:450,width: 300,child:
+      Drawer(
+        child: Column(
           children: [
-            ListTile(
-              title: Text('Graphs'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,MaterialPageRoute(builder: (context)=>MyChartPage()));
-              },
-            ),
-            ListTile(
-              title: Text('Recomendations'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,MaterialPageRoute(builder: (context)=>RecommendPage()));
-              },
-            ),
             Padding(
-              padding: const EdgeInsets.only(top: 40.0),
-              child: ListTile(
-                title: Text('Log Out'),
-                onTap: () {
-                  UsernameData.deleteUsernameData();
-                  jobData.JobDataExit();
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  // Handle onTap event for "Log Out" ListTile
-                },
+              padding: const EdgeInsets.only(top: 40.0, bottom: 40),
+              child: Text(
+                'Menu',
+                style: TextStyle(fontSize: 30),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                children: [
+                  ListTile(
+                    leading: Image.asset('images/graphs.png'), // Adjust the image path as per your file structure
+                    title: Text('Graphs',style: TextStyle(fontSize: 20),),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyChartPage()));
+                    },
+                  ),
+                  SizedBox(height: 35),
+                  ListTile(
+                    leading: Image.asset('images/recommendations.png'), // Adjust the image path as per your file structure
+                    title: Text('Recommendations',style: TextStyle(fontSize: 20),),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RecommendPage()));
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 95.0),
+                    child: ListTile(
+                      leading: Image.asset('images/logout.png'), // Adjust the image path as per your file structure
+                      title: Text('Log Out',style: TextStyle(fontSize: 20),),
+                      onTap: () {
+                        UsernameData.deleteUsernameData();
+                        jobData.JobDataExit();
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        // Handle onTap event for "Log Out" ListTile
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
-        )
-      ),
-    ])
-      ))),
+        ),
+      )
+      )),
       body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage, addSelectedCallback:addSelectedCallback, isJobSelected: isJobSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback,isArchive:isArchive),
       floatingActionButton: !isArchive?FloatingActionButton(
         onPressed: () {

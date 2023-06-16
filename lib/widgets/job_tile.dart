@@ -88,7 +88,10 @@ class JobTile extends StatelessWidget {
               SizedBox(height: 10,),
             ],
           ),
-          leading: ClipRRect(
+          leading:  Container(
+            width: 55.0,
+            child: Align(
+            alignment: Alignment.center,child:ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: currentJob.company_logo == ""
                 ? Image.asset(
@@ -103,15 +106,15 @@ class JobTile extends StatelessWidget {
               height: 60.0,
               width: 55,
             ),
-          ),
+          ))),
           onTap: () => onTapActions(context),
           onLongPress: () => onLongPressActions(context),
         )),
+        SizedBox(height: 3,),
         Divider(
           height: 1,
           color: Colors.grey,
         ),
-        SizedBox(height: 7,),
       ],
     );
   }

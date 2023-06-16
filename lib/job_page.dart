@@ -179,9 +179,6 @@ class _JobPageState extends State<JobPage> {
 
                 ],)
               ),
-
-
-
               Container(
                 child: Card(
                     color: const Color(0xFFFFF5EE),

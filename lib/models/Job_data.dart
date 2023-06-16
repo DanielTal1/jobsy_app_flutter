@@ -92,7 +92,7 @@ class JobData extends ChangeNotifier {
     }
   }
 
-  void deleteJobsLocally(List<String> jobIds,bool isArchive) {
+  void archiveJobsLocally(List<String> jobIds,bool isArchive) {
     final listJobsToAdd=isArchive?jobs:archiveJobs;
     final listJobsToDelete=isArchive?archiveJobs:jobs;
     for (String jobId in jobIds) {
@@ -107,6 +107,21 @@ class JobData extends ChangeNotifier {
     sortJobs(listJobsToAdd);
     notifyListeners();
   }
+
+  void deleteJobsLocally(List<String> jobIds,bool isArchive) {
+    final listJobsToDelete=isArchive?archiveJobs:jobs;
+    for (String jobId in jobIds) {
+      listJobsToDelete.removeWhere((job) {
+        if (job.id == jobId) {
+          return true; // Remove the job from listJobsToDelete
+        }
+        return false;
+      });
+    }
+    notifyListeners();
+  }
+
+
 
   void updatePinsLocally(List<String> jobIds,List<Job> listJobs){
     for (String jobId in jobIds) {
