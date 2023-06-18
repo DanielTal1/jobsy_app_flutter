@@ -1,9 +1,4 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'models/Job_data.dart';
 
 class SearchJobs extends StatefulWidget {
   final Function closeCallBack;
@@ -17,6 +12,8 @@ class SearchJobs extends StatefulWidget {
 class _SearchJobsState extends State<SearchJobs> {
   late Function closeCallBack;
   late Function searchCallBack;
+  final borderCircular=20.0;
+  final borderWidth=3.0;
   final _searchController = TextEditingController();
   void initState() {
     super.initState();
@@ -38,12 +35,12 @@ class _SearchJobsState extends State<SearchJobs> {
             ),
             prefixIconColor: Colors.white,
             enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(borderCircular),
                 borderSide: BorderSide(color:Colors.white)
             ),
             focusedBorder:OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.white, width: 3.0),
-              borderRadius: BorderRadius.circular(20),
+              borderSide:  BorderSide(color: Colors.white, width: borderWidth),
+              borderRadius: BorderRadius.circular(borderCircular),
             ),
           ),
           onChanged:mySearch

@@ -6,6 +6,16 @@ import '../models/url_data.dart';
 class RecommendTile extends StatelessWidget {
   final Recommendation currentRecommend;
   RecommendTile({required this.currentRecommend});
+  final verySmallPad=3.0;
+  final dividerHeight=2.0;
+  final roleMaxLines=2;
+  final companyAndLocationMaxLines=1;
+  final containerHeight=80.0;
+  final smallPad=10.0;
+  final trialingWidth=130.0;
+  final iconWidth=55.0;
+  final iconHeight=60.0;
+  final clickIconSize=30.0;
 
 
 
@@ -13,58 +23,58 @@ class RecommendTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 3,),
+        SizedBox(height: verySmallPad,),
         Container(
-            height: 80.0, // Set the desired height
+            height: containerHeight,
             child: ListTile(
               title: Text(
                 currentRecommend.role,
-                maxLines: 2, // Maximum of 2 lines
+                maxLines: roleMaxLines, // Maximum of 2 lines
                 overflow: TextOverflow.ellipsis, // Truncate with "..."
               ),
               trailing:currentRecommend.url != "" ?
-              Image.asset('images/click.png', fit: BoxFit.cover, height: 30.0, width: 30,)
+              Image.asset('images/click.png', fit: BoxFit.cover, height: clickIconSize, width: clickIconSize,)
                   :null,
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     currentRecommend.company,
-                    maxLines: 1,
+                    maxLines: companyAndLocationMaxLines,
                     overflow: TextOverflow.ellipsis, // Truncate with "..."
                   ),
                   Text(
                     currentRecommend.location,
-                    maxLines: 1,
+                    maxLines: companyAndLocationMaxLines,
                     overflow: TextOverflow.ellipsis, // Truncate with "..."
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: smallPad,),
                 ],
               ),
               leading:  Container(
-                  width: 55.0,
+                  width: iconWidth,
                   child: Align(
                       alignment: Alignment.center,child:ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(smallPad),
                     child: currentRecommend.company_logo == ""
                         ? Image.asset(
                       'images/company.png',
                       fit: BoxFit.cover,
-                      height: 60.0,
-                      width: 55,
+                      height:iconHeight,
+                      width: iconWidth,
                     )
                         : Image.network(
                       currentRecommend.company_logo,
                       fit: BoxFit.cover,
-                      height: 60.0,
-                      width: 55,
+                      height: iconHeight,
+                      width: iconWidth,
                     ),
                   ))),
               onTap: () => currentRecommend.url!=""?UrlData.launchUrlFun(currentRecommend.url,context):null
             )),
-        SizedBox(height: 3,),
+        SizedBox(height: verySmallPad,),
         Divider(
-          height: 1,
+          height: dividerHeight,
           color: Colors.grey,
         ),
       ],

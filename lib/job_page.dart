@@ -1,13 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:jobsy_app_flutter/add_job_screen.dart';
 import 'package:jobsy_app_flutter/widgets/comment_list.dart';
 import 'package:jobsy_app_flutter/widgets/popup_widget.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'add_comment_screen.dart';
-import 'models/Job_data.dart';
 import 'models/company.dart';
 import 'models/job.dart';
 import 'models/stage.dart';
@@ -30,6 +25,18 @@ class _JobPageState extends State<JobPage> {
   late Company currentCompany;
   late String selected_stage=currentJob.interview_stage;
   late bool isPopup=false;
+  final defaultColor=Color(0xFFFFF5EE);
+  final cardElevation=20.0;//shadow effect
+  final defaultPad=20.0;
+  final defaultFont=20.0;
+  final smallPad=10.0;
+  final verySmallPad=5.0;
+  final iconSize=100.0;
+  final DropdownMenuwidth=35.0;
+  final bigFont=30.0;
+  final circularRadius=15.0;
+  final appbarColor=Color(0xFF126180);
+
 
 
   void updateInterviewCallBack(DateTime next_interview){
@@ -37,9 +44,9 @@ class _JobPageState extends State<JobPage> {
       currentJob.next_interview=next_interview;
     });
 
-
   }
 
+  //gets the company data from server with http request
   Future<void> fetchCompany(String companyName) async {
     try {
       final response = await http.get(Uri.parse('http://10.0.2.2:3000/company/' + companyName));
@@ -59,7 +66,6 @@ class _JobPageState extends State<JobPage> {
     super.initState();
     currentCompany=Company(
         name: currentJob.company,
-        rating: 0,
         logo: currentJob.company_logo,
         description: ""
     );
@@ -70,60 +76,63 @@ class _JobPageState extends State<JobPage> {
     return Scaffold(resizeToAvoidBottomInset : false,
         appBar: AppBar(
             title:Text('Jobsy'),
-            backgroundColor:const Color(0xFF126180),
+            backgroundColor:appbarColor,
         ),
         body:Padding(
-          padding:const EdgeInsets.all(20),
+          padding:EdgeInsets.all(defaultPad),
           child:ListView(
             shrinkWrap: true,
             children: [
-              Card(
-              color: const Color(0xFFFFF5EE),
-            elevation:20,
+              Card( //first card-name and logo
+              color: defaultColor,
+            elevation:cardElevation,
             child:Padding(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(defaultPad),
                 child: Row(children: [
                   ClipRRect(// Image border
-                      child: currentJob.company_logo==""?Image.asset('images/company.png',fit: BoxFit.fill,height:100,width:100):Image.network(currentJob.company_logo, fit: BoxFit.fill,height:100,width:100),
-                      borderRadius: BorderRadius.circular(15)
+                      child: currentJob.company_logo==""?
+                      Image.asset('images/company.png',fit: BoxFit.fill,height:iconSize,width:iconSize) :
+                      Image.network(currentJob.company_logo, fit: BoxFit.fill,height:iconSize,width:iconSize),
+                      borderRadius: BorderRadius.circular(circularRadius)
                   ),
-                  SizedBox(width: 20.0),
+                  SizedBox(width: defaultPad),
                   Expanded(
                       child:Container(
                             child:Padding(
-                                padding: const EdgeInsets.all(5),
-                                child:Center(child: Text(currentJob.company ,style: TextStyle(fontSize: 30),textAlign: TextAlign.left))
+                                padding:  EdgeInsets.all(verySmallPad),
+                                child:Center(child: Text(currentJob.company ,style: TextStyle(fontSize: bigFont),textAlign: TextAlign.left))
                             )
                       )
                   ),
-
-
-
                 ])
                    )
               ),
               if(currentCompany.description!="")Container(
-                  child: Card(
-                      color: const Color(0xFFFFF5EE),
-                      elevation:20,
+                  child: Card(//second card-showing description if exists
+                      color: defaultColor,
+                      elevation:cardElevation,
                       child:Padding(
-                          padding: const EdgeInsets.all(20),
-                          child:Center(child: Text(currentCompany.description ,style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
+                          padding:  EdgeInsets.all(defaultPad),
+                          child:Center(child: Text(currentCompany.description ,
+                              style: TextStyle(fontSize: defaultFont),textAlign: TextAlign.center)
+                          )
                       )
 
                   )
               ),
               IntrinsicHeight(child:
               Row(crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+                children: [//role and location
                 Expanded(flex:1,
                     child:Container(
                       child: Card(
-                          color: const Color(0xFFFFF5EE),
-                          elevation:20,
+                          color: defaultColor,
+                          elevation:cardElevation,
                           child:Padding(
-                              padding: const EdgeInsets.all(20),
-                              child:Center(child: Text(currentJob.role ,style: TextStyle(fontSize: 20),textAlign: TextAlign.left))
+                              padding:  EdgeInsets.all(defaultPad),
+                              child:Center(child: Text(currentJob.role ,
+                                  style: TextStyle(fontSize: defaultFont),textAlign: TextAlign.left)
+                              )
                           )
                       ),
                     )
@@ -131,11 +140,12 @@ class _JobPageState extends State<JobPage> {
                 Expanded(flex:1,
                     child:Container(
                       child: Card(
-                          color: const Color(0xFFFFF5EE),
-                          elevation:20,
+                          color: defaultColor,
+                          elevation:cardElevation,
                           child:Padding(
-                              padding: const EdgeInsets.all(20),
-                              child:Center(child: Text(currentJob.location ,style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
+                              padding: EdgeInsets.all(defaultPad),
+                              child:Center(child: Text(currentJob.location ,
+                                  style: TextStyle(fontSize: defaultFont),textAlign: TextAlign.center))
                           )
                       ),
                     )
@@ -145,19 +155,19 @@ class _JobPageState extends State<JobPage> {
               ),
               if(currentJob.url!="")IntrinsicHeight(child:
               Row(crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+                children: [//showing url and last updated if url exists
                   Expanded(flex:1,
                       child:Container(
                           child: Card(
-                              color: const Color(0xFFFFF5EE),
-                              elevation:20,
+                              color: defaultColor,
+                              elevation:cardElevation,
                               child:Padding(
-                                  padding: const EdgeInsets.all(10),
+                                  padding:  EdgeInsets.all(smallPad),
                                   child:Center(child: TextButton(
                                     onPressed: () {
                                       UrlData.launchUrlFun(currentJob.url,context);
                                     },
-                                    child: Text('Job link',style: TextStyle(fontSize: 20)),
+                                    child: Text('Job link',style: TextStyle(fontSize: defaultFont)),
                                   ))
                               )
 
@@ -167,11 +177,12 @@ class _JobPageState extends State<JobPage> {
                   Expanded(flex:1,
                       child:Container(
                         child: Card(
-                            color: const Color(0xFFFFF5EE),
-                            elevation:20,
+                            color: defaultColor,
+                            elevation:cardElevation,
                              child:Padding(
-                                padding: const EdgeInsets.all(20),
-                                child:Center(child: Text('last update: '+currentJob.updatedAt ,style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
+                                padding:  EdgeInsets.all(defaultPad),
+                                child:Center(child: Text('last update: '+currentJob.updatedAt ,
+                                    style: TextStyle(fontSize: defaultFont),textAlign: TextAlign.center))
                             )
                         ),
                       )
@@ -180,24 +191,25 @@ class _JobPageState extends State<JobPage> {
                 ],)
               ),
               Container(
-                child: Card(
-                    color: const Color(0xFFFFF5EE),
-                    elevation:20,
+                child: Card(//showing stage
+                    color: defaultColor,
+                    elevation:cardElevation,
                     child:Padding(
-                        padding: const EdgeInsets.all(20),
+                        padding:  EdgeInsets.all(defaultPad),
                         child:Row(children: [
-                          Text('Stage: ' ,style: TextStyle(fontSize: 20)),
-                          SizedBox(width: 10),
-                          DropdownButtonHideUnderline(
+                          Text('Stage: ' ,style: TextStyle(fontSize: defaultFont)),
+                          SizedBox(width: smallPad),
+                          DropdownButtonHideUnderline(//lists the optional stages
                               child:ButtonTheme(
                                   alignedDropdown: true,
                                   child:DropdownButton(
-                                    hint:Text('Select Stage'),
                                     value: selected_stage,
                                     onChanged: (newValue) async {
                                       if(newValue!=null){
+                                        //if value changed open popup
                                         if(selected_stage!=newValue){
-                                          PopupWidget.openPopup(context,newValue,currentJob,widget.isArchive,updateInterviewCallBack);
+                                          PopupWidget.openPopup(context,newValue,
+                                              currentJob,widget.isArchive,updateInterviewCallBack);
                                         }
                                         setState(() {
                                           selected_stage=newValue;
@@ -206,15 +218,15 @@ class _JobPageState extends State<JobPage> {
                                       }
                                     },
                                     items: stagesList.map((stageItem){
-                                      return DropdownMenuItem(
+                                      return DropdownMenuItem( //for the stage update menu
                                           value:stageItem['name'].toString(),
                                           child:Row(
                                               children:[
-                                                Image.asset(stageItem['image'],width:35),
-                                                SizedBox(width: 5),
+                                                Image.asset(stageItem['image'],width:DropdownMenuwidth),
+                                                SizedBox(width: verySmallPad),
                                                 Container(
-                                                    margin: EdgeInsets.only(left:10),
-                                                    child:Text(stageItem['name'],style:TextStyle(fontSize: 20))
+                                                    margin: EdgeInsets.only(left:smallPad),
+                                                    child:Text(stageItem['name'],style:TextStyle(fontSize: defaultFont))
                                                 )
                                               ]
                                           )
@@ -223,24 +235,24 @@ class _JobPageState extends State<JobPage> {
                                   )
                               )
                           )
-
                         ],
                         )
                 ),
               )
               ),
-              if(currentJob.next_interview.isAfter(DateTime.now()))
+              if(currentJob.next_interview.isAfter(DateTime.now())) //showing next_interview if exists
                 Card(
-                  color:const Color(0xFFFFF5EE),
-                  elevation:20,
+                  color:defaultColor,
+                  elevation:cardElevation,
                   child:Padding(
-                      padding: const EdgeInsets.all(20),
-                      child:Center(child: Text('next interview: '+DateFormat('dd/MM/yy').format(currentJob.next_interview),style: TextStyle(fontSize: 20),textAlign: TextAlign.center))
+                      padding:  EdgeInsets.all(defaultPad),
+                      child:Center(child: Text('next interview: '+DateFormat('dd/MM/yy').format(currentJob.next_interview),
+                          style: TextStyle(fontSize: defaultFont),textAlign: TextAlign.center))
                   ),
                 ),
               Card(
-                color:const Color(0xFFFFF5EE),
-                elevation:20,
+                color:defaultColor,
+                elevation:cardElevation,
                 child:CommentList(currentCompany: currentJob.company),
               )
 

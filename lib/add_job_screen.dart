@@ -25,6 +25,15 @@ class _AddJobScreenState extends State<AddJobScreen> {
   late String addedRole;
   late String addedLocation;
   late Function addJobCallback;
+  final backgroundColor=Color(0xFFFFF5EE);
+  final buttonColor=Color(0xFF0077c0);
+  final fontSize=20.0;
+  final normalPad=20.0;
+  final bigPad=30.0;
+  final smallPad=10.0;
+  final verySmallPad=5.0;
+  final buttonHeight=42.0;
+  final buttonWidth=42.0;
 
   @override
   void initState() {
@@ -75,27 +84,27 @@ class _AddJobScreenState extends State<AddJobScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xff757575),
+      color: buttonColor,
       child: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(normalPad),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
+            topLeft: Radius.circular(normalPad),
+            topRight: Radius.circular(normalPad),
           ),
         ),
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            padding:  EdgeInsets.fromLTRB(normalPad, 0, normalPad, 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 20.0),
+                SizedBox(height: normalPad),
                 Text('Add Job',
-                    style:TextStyle(fontSize: 20.0,color:Color(0xFF0077c0))),
-                SizedBox(height: 10.0),
+                    style:TextStyle(fontSize: fontSize,color:buttonColor)),
+                SizedBox(height: smallPad),
                 TextFormField(
                   onChanged: (newValue) => addedCompany = newValue,
                   controller: _company,
@@ -110,7 +119,7 @@ class _AddJobScreenState extends State<AddJobScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 5.0),
+                SizedBox(height: verySmallPad),
                 TextFormField(
                   onChanged: (newValue) => addedRole = newValue,
                   controller: _role,
@@ -125,7 +134,7 @@ class _AddJobScreenState extends State<AddJobScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 5.0),
+                SizedBox(height: verySmallPad),
                 TextFormField(
                   onChanged: (newValue) => addedLocation = newValue,
                   controller: _location,
@@ -140,16 +149,16 @@ class _AddJobScreenState extends State<AddJobScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: smallPad),
                 Container(
-                  height: 40,
+                  height: buttonHeight,
                   width: double.infinity,
                   // height: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  padding:  EdgeInsets.fromLTRB(smallPad, 0, smallPad, 0),
                   child: Material(
-                    color: Color(0xFF0077c0),
-                    borderRadius: BorderRadius.circular(30.0),
-                    elevation: 5.0,
+                    color: buttonColor,
+                    borderRadius: BorderRadius.circular(bigPad),
+                    elevation: verySmallPad,
                     child: MaterialButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()==true) {
@@ -158,8 +167,8 @@ class _AddJobScreenState extends State<AddJobScreen> {
                           addJobCallback();
                         }
                       },
-                      minWidth: 40.0,
-                      height: 42.0,
+                      minWidth: buttonWidth,
+                      height: buttonHeight,
                       child: Text(
                         'Add Job',
                       ),
@@ -167,7 +176,7 @@ class _AddJobScreenState extends State<AddJobScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: normalPad),
               ],
             ),
           ),

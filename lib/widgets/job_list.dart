@@ -48,6 +48,7 @@ class _JobListState extends State<JobList> {
     isSelectedListEmptyCallback=widget.isSelectedListEmptyCallback;
   }
 
+  //function to check if a job matches the search query and selected stage
   bool jobCheck(String query, Job currentJob) {
     final company = currentJob.company.toLowerCase();
     final role = currentJob.role.toLowerCase();
@@ -58,54 +59,38 @@ class _JobListState extends State<JobList> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     final jobProvider = Provider.of<JobData>(context);
-    final shownJobs;
-    if(!widget.isArchive){
-      shownJobs = jobProvider.jobs
-          .where((job) => jobCheck(searchedQuery, job))
-          .toList();
-      return jobProvider.isLoadingArchive
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-        itemBuilder: (context, index) {
-          final currentJob = shownJobs[index];
-          final isSelected = isJobSelected(currentJob);
+    final jobsList = widget.isArchive ? jobProvider.archiveJobs : jobProvider.jobs;
+    final isLoading = widget.isArchive ? jobProvider.isLoading : jobProvider.isLoadingArchive;
+    final shownJobs = jobsList
+        .where((job) => jobCheck(searchedQuery, job)).toList();
+    return isLoading
+        ? Center(child: CircularProgressIndicator())
+        : ListView.builder(
+      itemBuilder: (context, index) {
+        final currentJob = shownJobs[index];
+        final isSelected = isJobSelected(currentJob);
 
-          return Container(
-            color: isSelected ? Colors.blueGrey : Colors.transparent,
-            child: JobTile(currentJob: currentJob,
-              addSelectedCallback:addSelectedCallback,
-              removeSelectedCallback:removeSelectedCallback,
-              isSelectedListEmptyCallback:isSelectedListEmptyCallback,
-              isJobSelected:isJobSelected, isArchive: widget.isArchive,),
-          );
-        },
-        itemCount: shownJobs.length,
-      );
-    }
-    else{
-      shownJobs = jobProvider.archiveJobs
-          .where((job) => jobCheck(searchedQuery, job))
-          .toList();
-      return jobProvider.isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-        itemBuilder: (context, index) {
-          final currentJob = shownJobs[index];
-          final isSelected = isJobSelected(currentJob);
-
-          return Container(
-            color: isSelected ? Colors.blueGrey : Colors.transparent,
-            child: JobTile(currentJob: currentJob,addSelectedCallback:addSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback,isJobSelected:isJobSelected,isArchive:widget.isArchive),
-          );
-        },
-        itemCount: shownJobs.length,
-      );
-    }
+        return Container(
+          color: isSelected ? Colors.blueGrey : Colors.transparent,
+          child: JobTile(
+            currentJob: currentJob,
+            addSelectedCallback: addSelectedCallback,
+            removeSelectedCallback: removeSelectedCallback,
+            isSelectedListEmptyCallback: isSelectedListEmptyCallback,
+            isJobSelected: isJobSelected,
+            isArchive: widget.isArchive,
+          ),
+        );
+      },
+      itemCount: shownJobs.length,
+    );
   }
 
+
+  //called when the stateful widget is rebuilt with a new instance of the widget
+  //when a new query or stage sent by home_page this function is called
   @override
   void didUpdateWidget(JobList oldWidget) {
     super.didUpdateWidget(oldWidget);

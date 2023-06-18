@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:jobsy_app_flutter/models/username_data.dart';
-
 import 'home_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,6 +17,18 @@ class _Login extends State<Login> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   String loginError="";
+  final appbarColor=Color(0xFF126180);
+  final normalPad=20.0;
+  final smallPad=10.0;
+  final bigPad=30.0;
+  final veryBigPad=40.0;
+  final jobsyImageHeight=70.0;
+  final buttonCircularRadius=30.0;
+  final buttonWidth=200.0;
+  final buttonHeight=42.0;
+  final buttonContainerHeight=50.0;
+  final buttonColor=Color(0xFF0093AF);
+  final buttonElevation=5.0;
 
 
   Future<bool> checkLogin() async {
@@ -58,28 +68,28 @@ class _Login extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(resizeToAvoidBottomInset : false,
       appBar: AppBar(
-          backgroundColor:const Color(0xFF72A0C1),
+          backgroundColor:appbarColor,
           title: const Text('Jobsy')),
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: EdgeInsets.only(left: normalPad, right: normalPad),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Hero(
+                  Hero( //hero animation
                     tag: 'logo',
                     child:Container(
                       child: Image.asset('images/Jobsy.png'),
-                      height: 70.0,
+                      height: jobsyImageHeight,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20.0),
+              SizedBox(height: normalPad),
               TextFormField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
@@ -93,7 +103,7 @@ class _Login extends State<Login> {
                   return null;
                 },
               ),
-              SizedBox(height: 20.0),
+              SizedBox(height: normalPad),
               TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
@@ -108,37 +118,35 @@ class _Login extends State<Login> {
                   return null;
                 },
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height:veryBigPad),
               Text(loginError),
               Container(
-                height: 50,
+                height: buttonContainerHeight,
                 width: double.infinity,
                 // height: double.infinity,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.only(left: smallPad, right: smallPad),
                 child: Material(
-                  elevation: 5.0,
-                  color: Color(0xFF0093AF),
-                  borderRadius: BorderRadius.circular(30.0),
+                  elevation: buttonElevation,
+                  color: buttonColor,
+                  borderRadius: BorderRadius.circular(buttonCircularRadius),
                   child: MaterialButton(
                     onPressed: () async {
                       loginError="";
                       if (_formKey.currentState!.validate()) {
                         if(await checkLogin()){
-                          await UsernameData.saveUsername(_usernameController.text);
-                          await FirebaseMessaging.instance.subscribeToTopic('notifications');
+                          await UsernameData.saveUsername(_usernameController.text);//save username
+                          await FirebaseMessaging.instance.subscribeToTopic('notifications'); //subscribe  the current device to firebase
                           _usernameController.clear();
                           _passwordController.clear();
-                          Navigator.pushNamed(context, HomePage.id);
+                          Navigator.pushNamed(context, HomePage.id); //move to homePage
                         }
                         else{
                           setState(() {
-                            loginError="Invalid username or password";
+                            loginError="Invalid username or password"; //change error
                           });
                         }
                       }
                     },
-                    minWidth: 200.0,
-                    height: 42.0,
                     child: Text(
                       'Log In',
                     ),

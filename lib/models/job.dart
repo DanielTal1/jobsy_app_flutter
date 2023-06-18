@@ -33,28 +33,6 @@ class Job{
   }
 
 
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'company': company,
-      'role': role,
-      'location': location,
-      'url': url,
-      'stage': interview_stage,
-      'updatedAt': updatedAt,
-      'company_logo': company_logo,
-      'archive': archive,
-      'pin': pin,
-      'last_updated':last_updated,
-      'created_at':created_at,
-      'next_interview':next_interview
-    };
-  }
-
-
-
-
-
   Job({required this.id,required this.company, required this.role, required this.location, required this.updatedAt,required this.interview_stage, this.url,required this.company_logo, required this.archive,required this.pin, required this.last_updated, required this.created_at, required this.next_interview});
 
   void changeStage(String new_stage ){

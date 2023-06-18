@@ -11,6 +11,7 @@ class StageData {
   StageData(this.stage, this.count, this.iconPath);
 
   static List<StageData> prepareChartData(List<Job> jobs) {
+    //count the number of jobs from each stage for pie chart
     Map<String, int> stageCounts = {};
 
     jobs.forEach((job) {

@@ -17,6 +17,18 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   String loginError="";
+  final appbarColor=const Color(0xFF126180);
+  final buttonColor=Color(0xFF0077c0);
+  final verBigPad=50.0;
+  final bigPad=40.0;
+  final normalPad=20.0;
+  final smallPad=10.0;
+  final elevationButton=5.0;
+  final jobsyImageHeight=70.0;
+  final borderRadius=30.0;
+  final buttonHeight=50.0;
+
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -50,12 +62,12 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(resizeToAvoidBottomInset : false,
       appBar: AppBar(
-        backgroundColor:const Color(0xFF72A0C1),
+        backgroundColor:appbarColor,
         title: Text('Jobsy'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 50, 20, 50),
+          padding: EdgeInsets.fromLTRB(normalPad, verBigPad, normalPad, verBigPad),
           child:Center(child:Form(
           key: _formKey,
             child:Column(
@@ -68,12 +80,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     tag: 'logo',
                     child:Container(
                       child: Image.asset('images/Jobsy.png'),
-                      height: 70.0,
+                      height: jobsyImageHeight,
                     ),
                   ),
                 ],
               ),
-               SizedBox(height: 20.0),
+               SizedBox(height: normalPad),
               TextFormField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
@@ -87,7 +99,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20.0),
+              SizedBox(height: normalPad),
               TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
@@ -102,7 +114,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20.0),
+              SizedBox(height: normalPad),
               TextFormField(
                 controller: _confirmPasswordController,
                 decoration: const InputDecoration(
@@ -120,17 +132,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 40.0),
+              SizedBox(height: bigPad),
               Text(loginError),
               Container(
-                height: 50,
+                height: buttonHeight,
                 width: double.infinity,
                 // height: double.infinity,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: EdgeInsets.only(left: smallPad, right: smallPad),
                 child: Material(
-                  color: Color(0xFF0077c0),
-                  borderRadius: BorderRadius.circular(30.0),
-                  elevation: 5.0,
+                  color: buttonColor,
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  elevation:elevationButton,
                   child: MaterialButton(
                     onPressed: () async {
                       loginError="";
@@ -148,8 +160,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         }
                       }
                     },
-                    minWidth: 200.0,
-                    height: 42.0,
                     child: Text(
                       'Register',
                     ),

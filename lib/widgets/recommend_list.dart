@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jobsy_app_flutter/widgets/recommend_tile.dart';
 import 'package:provider/provider.dart';
-
 import '../models/recommendation_data.dart';
 
 class RecommendList extends StatefulWidget {
@@ -12,19 +11,32 @@ class RecommendList extends StatefulWidget {
 }
 
 class _RecommendListState extends State<RecommendList> {
+  final fontSize=20.0;
 
   @override
   Widget build(BuildContext context) {
     final recommendProvider = Provider.of<RecommendationData>(context);
-    final recommendations_list = recommendProvider.recommendations;
+    final recommendationsList = recommendProvider.recommendations;
 
-    return recommendProvider.isLoading ? Center(child: CircularProgressIndicator()) :
-    ListView.builder(itemBuilder: (context, index) {
-      return RecommendTile(
-          currentRecommend: recommendations_list[index]
+    if (recommendationsList.isEmpty) {
+      return Center(
+        child: Text(
+          'Currently there are no recommendations.\nPlease add some jobs and try again.',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+        ),
       );
-    },
-        itemCount: recommendations_list.length
+    }
+
+    return recommendProvider.isLoading
+        ? Center(child: CircularProgressIndicator())
+        : ListView.builder(
+      itemBuilder: (context, index) {
+        return RecommendTile(
+          currentRecommend: recommendationsList[index],
+        );
+      },
+      itemCount: recommendationsList.length,
     );
   }
 

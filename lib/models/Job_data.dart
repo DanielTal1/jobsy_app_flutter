@@ -12,7 +12,7 @@ class JobData extends ChangeNotifier {
   List<Job> _archiveJobs=[];
   bool _isLoading = false;
   bool _isLoadingArcive = false;
-  List<Job> get jobs => _jobs;
+  List<Job> get jobs => _jobs; //getter method
   List<Job> get archiveJobs => _archiveJobs;
   bool get isLoading => _isLoading;
   bool get isLoadingArchive => _isLoadingArcive;
@@ -21,17 +21,20 @@ class JobData extends ChangeNotifier {
 
 
   void JobDataInitialize() {
+    //initialize job data by fetching jobs and archive jobs
     fetchJobs();
     fetchJobsArchive();
   }
 
   void JobDataExit(){
+    //clear job data when exiting
     _jobs.clear();
     _archiveJobs.clear();
   }
 
 
   Future<void> fetchJobs() async {
+    //fetch jobs from the server for the current user
     _isLoading = true;
     String? username=await UsernameData.getUsername();
     if(username==null){
@@ -54,6 +57,7 @@ class JobData extends ChangeNotifier {
 
 
   Future<void> fetchJobsArchive() async {
+    //fetch archived jobs from the server for the current user
     _isLoadingArcive = true;
     String? username=await UsernameData.getUsername();
     if(username==null){
@@ -76,6 +80,7 @@ class JobData extends ChangeNotifier {
 
 
   Future<void> deleteJobs(List<String> jobIds) async {
+    //delete jobs from the server based on the given job ids
     try {
       final response = await http.delete(
         Uri.parse('http://10.0.2.2:3000/jobs'),
@@ -93,6 +98,7 @@ class JobData extends ChangeNotifier {
   }
 
   void archiveJobsLocally(List<String> jobIds,bool isArchive) {
+    //move jobs from or to archive locally based on the given job IDs and the flag isArchive
     final listJobsToAdd=isArchive?jobs:archiveJobs;
     final listJobsToDelete=isArchive?archiveJobs:jobs;
     for (String jobId in jobIds) {
@@ -109,6 +115,7 @@ class JobData extends ChangeNotifier {
   }
 
   void deleteJobsLocally(List<String> jobIds,bool isArchive) {
+    //delete jobs locally based on the given job is and the flag isArchive
     final listJobsToDelete=isArchive?archiveJobs:jobs;
     for (String jobId in jobIds) {
       listJobsToDelete.removeWhere((job) {
@@ -124,6 +131,7 @@ class JobData extends ChangeNotifier {
 
 
   void updatePinsLocally(List<String> jobIds,List<Job> listJobs){
+    //update pins locally for the given job ids
     for (String jobId in jobIds) {
       Job job=listJobs.firstWhere((job) => job.id == jobId);
       job.pin = !job.pin;
@@ -132,6 +140,7 @@ class JobData extends ChangeNotifier {
   }
 
   Future<void> updatePins(List<String> jobIds) async {
+    //update pins on the server for the given job IDs
     try {
       final response = await http.put(
         Uri.parse('http://10.0.2.2:3000/jobs/pin/0'),
@@ -150,12 +159,13 @@ class JobData extends ChangeNotifier {
 
 
   void sortJobs(List<Job> listJobs) {
+    //sort the list of jobs based on pin and last_updated
     listJobs.sort((a, b) {
       if (a.pin == b.pin) {
-        // If the pins are the same, sort by last_updated in descending order
+        //if the pins are the same, sort by last_updated in descending order
         return b.last_updated.compareTo(a.last_updated);
       } else {
-        // Sort by pin in descending order
+        //sort by pin in descending order
         return b.pin ? 1 : -1;
       }
     });
@@ -165,6 +175,7 @@ class JobData extends ChangeNotifier {
 
 
   Future<void> updateArchive(List<String> jobIds) async {
+    //update archive status on the server for the given job ids
     try {
       final response = await http.put(
         Uri.parse('http://10.0.2.2:3000/jobs/archive/0'),
@@ -184,6 +195,7 @@ class JobData extends ChangeNotifier {
 
 
   Future<void> updateJob( String newStage,String jobId,DateTime interviewDate) async {
+    //update the stage and next interview date of a job on the server
     final url = Uri.parse('http://10.0.2.2:3000/jobs/'+jobId);
 
     try {
@@ -202,11 +214,8 @@ class JobData extends ChangeNotifier {
 
   }
 
-
-
-
-
   void updateStageLocally(newStage,JobId,List<Job> listJobs,DateTime interviewDate){
+    //update the stage, last_updated, and next_interview locally for a specific job
      Job job=listJobs.firstWhere((job) => job.id == JobId);
      job.interview_stage = newStage;
      job.last_updated=DateTime.now();
@@ -216,13 +225,42 @@ class JobData extends ChangeNotifier {
   }
 
 
+  Future<void> postJob(String addedCompany,String addedRole,String addedLocation) async {
+    String? username=await UsernameData.getUsername();
+    if(username==null){
+      return;
+    }
+    final url = Uri.parse('http://10.0.2.2:3000/jobs');
+    final body = json.encode({
+      "username": username,
+      "company":addedCompany ,
+      "role": addedRole,
+      "location": addedLocation,
+      "url":"",
+      "source":"",
+    });
 
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      );
 
-
-
-
-
-
+      if (response.statusCode == 200) {
+        // Request successful
+        print('Job created successfully');
+      } else {
+        // Request failed
+        print('Failed to create job: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Error occurred during the request
+      print('Error creating job: $error');
+    }
+  }
 
 
 }

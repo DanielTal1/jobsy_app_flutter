@@ -18,8 +18,10 @@ class CommentData extends ChangeNotifier{
 
   Future<void> fetchComments(String companyName) async {
     try {
+      //fetch comments from the server based on the company name
       final response = await http.get(Uri.parse('http://10.0.2.2:3000/comments/' + companyName));
       final jsonData = json.decode(response.body) as List<dynamic>;
+      //convert the JSON data to a list of Comment objects
       _comments = jsonData.map((commentData) => Comment.fromJson(commentData)).toList();
     } catch (error) {
       throw error;
@@ -28,13 +30,14 @@ class CommentData extends ChangeNotifier{
 
 
 
+  //
   Future<void> addComment(String company,String text,String role) async {
     String? username=await UsernameData.getUsername();
     if(username==null){
       return;
     }
     final url = Uri.parse('http://10.0.2.2:3000/comments');
-    // Define the request body
+    //define the request body
     final requestBody = json.encode({
       'company': company,
       'username': username,
@@ -43,6 +46,7 @@ class CommentData extends ChangeNotifier{
     });
 
     try {
+      //send a post request to add the comment to the server
       final response = await http.post(
         url,
         headers: {
@@ -64,6 +68,7 @@ class CommentData extends ChangeNotifier{
     }
   }
 
+  //Adds comments locally in addition to call to server
   Future<void> addCommentLocally(String company, String text, String role) async {
     String? username=await UsernameData.getUsername();
     if(username==null){
@@ -75,8 +80,8 @@ class CommentData extends ChangeNotifier{
       text: text,
       role: role,
     );
-    _comments.insert(0,newComment);
-    notifyListeners();
+    _comments.insert(0,newComment); //creates the comment on top
+    notifyListeners();//notify the changes to listener as provider
 
   }
 

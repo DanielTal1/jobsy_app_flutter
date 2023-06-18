@@ -3,36 +3,40 @@ import 'package:jobsy_app_flutter/models/comment.dart';
 
 class CommentTile extends StatelessWidget {
   final Comment currentComment;
+  final verySmallPad=5.0;
+  final smallFontSize=15.0;
+  final dividerWidth=250.0;
+  final dividerHeight=1.0;
   CommentTile({required this.currentComment});
 
   @override
   Widget build(BuildContext context) {
     return  Column(children:[ListTile(
       title: Text(
-        'username: '+currentComment.username+'       '+'Role: '+currentComment.role,
+        'Username: '+currentComment.username+'       '+'Role: '+currentComment.role,
         style: TextStyle(
-          fontSize: 15, // Adjust the font size as needed
-          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+          fontSize: smallFontSize,
+          fontWeight: FontWeight.bold,
         ),
       ),
       subtitle: Padding(
-        padding: EdgeInsets.only(top: 5), // Adjust the padding as needed
+        padding: EdgeInsets.only(top: verySmallPad),
         child: Text(
           currentComment.text,
           style: TextStyle(
-            fontSize: 15, // Same font size as the title
+            fontSize: smallFontSize,
           ),
         ),
       ),
     ),
     Container(
-    width: 250, // Adjust the width as needed
+    width: dividerWidth,
     child: Divider(
-    height: 1,
+    height: dividerHeight,
     color: Colors.grey,
     )
     ),
-      SizedBox(height: 6,)
+      SizedBox(height: verySmallPad,)
     ]);
   }
 }

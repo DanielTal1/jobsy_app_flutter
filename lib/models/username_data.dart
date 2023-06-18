@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UsernameData{
 
+  //uses flutter_secure_storage to save username
   static Future<void> saveUsername(String username) async {
     final storage = FlutterSecureStorage();
     try {
@@ -14,7 +15,7 @@ class UsernameData{
     }
   }
 
-  // Retrieve the username
+  //retrieve the username from secure_storage
   static Future<String?> getUsername() async {
     final storage = FlutterSecureStorage();
     try {
@@ -31,7 +32,7 @@ class UsernameData{
     }
   }
 
-
+  //deletes the username from secure storage when logging out
   static Future<void> deleteUsernameData() async {
     final storage = FlutterSecureStorage();
     await storage.delete(key: 'username');

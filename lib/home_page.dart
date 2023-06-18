@@ -23,10 +23,24 @@ class _HomePageState extends State<HomePage> {
   bool showSearch = false;
   late String searchedQuery = "";
   String selectedStage = '';
-  List<Job> selectedJobs = [];
+  List<Job> selectedJobs = []; //list tracking the selected jobs
   bool isArchive=false;
+  final appbarColor=const Color(0xFF126180);
+  final appbarBottomHeight=50.0;
+  final popMenuSize=24.0;
+  final popMenuPad=8.0;
+  final drawerHeight=450.0;
+  final drawerWidth=300.0;
+  final buttonColor=Color(0xFF126180);
+  final drawerTopPad=40.0;
+  final drawerFontH1=30.0;
+  final drawerFontH2=20.0;
+  final drawerBottomPad=95.0;
+  final addButtonPad=20.0;
 
 
+
+  //callback to close the search bar
   void searchCallBackClose() {
     setState(() {
       searchedQuery = "";
@@ -34,51 +48,56 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  //callback to get the search query
   void searchCallBackGetQuery(String newSearch) {
     setState(() {
       searchedQuery = newSearch;
     });
   }
 
+  //filter jobs based on the selected stage
   void filterJobs(String stage) {
     setState(() {
       selectedStage = stage;
-      // Perform filtering based on the selected stage
-      // You can update the 'searchedQuery' or call a filtering method
     });
   }
 
+  //callback to add a job to the selected jobs list
   void addSelectedCallback(Job currentJob){
     setState(() {
       selectedJobs.add(currentJob);
     });
   }
 
+  //callback to check if a job is selected
   bool isJobSelectedCallback(Job currentJob){
     return selectedJobs.contains(currentJob);
   }
 
+  //callback to remove a job from the selected jobs list
   void removeSelectedCallback(Job currentJob){
     setState(() {
       selectedJobs.remove(currentJob);
     });
   }
+
+  //callback to check if the selected jobs list is empty
   bool isSelectedListEmptyCallback(){
     return selectedJobs.isEmpty;
   }
 
+  //delete all selected jobs
   void deleteAllSelected(){
     setState(() {
       selectedJobs=[];
     });
   }
 
+  //update API callback to fetch jobs
   void  UpdateAPiCallback() async{
     final jobData = Provider.of<JobData>(context, listen: false);
     await jobData.fetchJobs();
   }
-
-
 
 
 
@@ -88,17 +107,14 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     final jobProvider = Provider.of<JobData>(context,listen: false);
     jobProvider.JobDataInitialize();
-    // Configure the message handling
+    //configure the firebae message handling
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      final jobProvider = Provider.of<JobData>(context,listen: false);
-      jobProvider.fetchJobs();
+        jobProvider.fetchJobs();
       print('Received message: ${message.notification?.title}');
-      // Handle the received message as needed
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Message opened from terminated state: ${message.notification?.title}');
-      // Handle the opened message from terminated state as needed
     });
   }
 
@@ -107,6 +123,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //using the job provider
     final jobData = Provider.of<JobData>(context,listen: false);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -116,13 +133,13 @@ class _HomePageState extends State<HomePage> {
             return IconButton(
               icon: Icon(Icons.menu),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                Scaffold.of(context).openDrawer(); //opens the drawer written below
               },
             );
           },
         ),
         title: isArchive?Text('Jobsy|Archive'):Text('Jobsy'),
-        backgroundColor: const Color(0xFF126180),
+        backgroundColor: appbarColor,
         actions: [
           if (!isSelectedListEmptyCallback())
             Row(
@@ -132,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                     List<String> jobIds = selectedJobs.map((job) => job.id).toList();
                     deleteAllSelected();
                     jobData.deleteJobsLocally(jobIds,isArchive);
-                    jobData.deleteJobs(jobIds);
+                    jobData.deleteJobs(jobIds);//deletes the selected jobs
                     },
                   icon: Icon(Icons.delete),
                 ),
@@ -141,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                     List<String> jobIds = selectedJobs.map((job) => job.id).toList();
                     deleteAllSelected();
                     jobData.archiveJobsLocally(jobIds,isArchive);
-                    jobData.updateArchive(jobIds);
+                    jobData.updateArchive(jobIds);//archives or archives selected jobs
                   },
                   icon: Icon(isArchive? Icons.unarchive:Icons.archive),
                 ),
@@ -151,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                     deleteAllSelected();
                     jobData.updatePinsLocally(jobIds,isArchive?jobData.archiveJobs:jobData.jobs);
                     jobData.sortJobs(isArchive?jobData.archiveJobs:jobData.jobs);
-                    jobData.updatePins(jobIds);
+                    jobData.updatePins(jobIds);//update pins for selected jobs
                   },
                   icon: Icon(Icons.push_pin),
                 ),
@@ -163,14 +180,14 @@ class _HomePageState extends State<HomePage> {
             ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
+          preferredSize: Size.fromHeight(appbarBottomHeight),
           child: showSearch == false
               ? Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  onPressed: () {
+                  onPressed: () { //shows search
                     deleteAllSelected();
                     setState(() {
                       showSearch = true;
@@ -181,6 +198,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white,
                   ),
                 ),
+                //when clicking on filter opens popupMenu
                 PopupMenuButton<String>(
                   onSelected: (stage) {
                       deleteAllSelected();
@@ -194,10 +212,10 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Image.asset(
                               'images/all.png',
-                              width: 24, // Adjust the width as needed
-                              height: 24, // Adjust the height as needed
+                              width: popMenuSize,
+                              height: popMenuSize,
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: popMenuPad),
                             Text('all'),
                           ],
                         ),
@@ -209,10 +227,10 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Image.asset(
                                 stage['image'],
-                                width: 24, // Adjust the width as needed
-                                height: 24, // Adjust the height as needed
+                                width: popMenuSize,
+                                height: popMenuSize,
                               ),
-                              SizedBox(width: 8),
+                              SizedBox(width: popMenuPad),
                               Text(stage['name']),
                             ],
                           ),
@@ -225,10 +243,8 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white,
                   ),
                 ),
-
-
                 IconButton(
-                  onPressed: () {
+                  onPressed: () {//moves between the archive and not archive list
                     deleteAllSelected();
                     setState(() {
                       isArchive = !isArchive;
@@ -248,17 +264,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      drawer:Align(
+      drawer:Align( //opens menu
         alignment: Alignment.topLeft,child:
-      SizedBox(height:450,width: 300,child:
+      SizedBox(height:drawerHeight,width: drawerWidth,child:
       Drawer(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 40.0, bottom: 40),
+              padding: EdgeInsets.only(top: drawerTopPad, bottom: drawerTopPad),
               child: Text(
                 'Menu',
-                style: TextStyle(fontSize: 30),
+                style: TextStyle(fontSize: drawerFontH1),
               ),
             ),
             Expanded(
@@ -267,8 +283,8 @@ class _HomePageState extends State<HomePage> {
                 shrinkWrap: true,
                 children: [
                   ListTile(
-                    leading: Image.asset('images/graphs.png'), // Adjust the image path as per your file structure
-                    title: Text('Graphs',style: TextStyle(fontSize: 20),),
+                    leading: Image.asset('images/graphs.png'),
+                    title: Text('Graphs',style: TextStyle(fontSize: drawerFontH2),),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MyChartPage()));
@@ -276,18 +292,18 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 35),
                   ListTile(
-                    leading: Image.asset('images/recommendations.png'), // Adjust the image path as per your file structure
-                    title: Text('Recommendations',style: TextStyle(fontSize: 20),),
+                    leading: Image.asset('images/recommendations.png'),
+                    title: Text('Recommendations',style: TextStyle(fontSize: drawerFontH2),),
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => RecommendPage()));
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 95.0),
+                    padding: EdgeInsets.only(top: drawerBottomPad),
                     child: ListTile(
-                      leading: Image.asset('images/logout.png'), // Adjust the image path as per your file structure
-                      title: Text('Log Out',style: TextStyle(fontSize: 20),),
+                      leading: Image.asset('images/logout.png'),
+                      title: Text('Log Out',style: TextStyle(fontSize: drawerFontH2),),
                       onTap: () {
                         UsernameData.deleteUsernameData();
                         jobData.JobDataExit();
@@ -304,14 +320,20 @@ class _HomePageState extends State<HomePage> {
         ),
       )
       )),
-      body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage, addSelectedCallback:addSelectedCallback, isJobSelected: isJobSelectedCallback,removeSelectedCallback:removeSelectedCallback,isSelectedListEmptyCallback:isSelectedListEmptyCallback,isArchive:isArchive),
+      body: JobList(searchedQuery: searchedQuery,selectedStage:selectedStage,
+          addSelectedCallback:addSelectedCallback,
+          isJobSelected: isJobSelectedCallback,
+          removeSelectedCallback:removeSelectedCallback,
+          isSelectedListEmptyCallback:isSelectedListEmptyCallback,
+          isArchive:isArchive),
       floatingActionButton: !isArchive?FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
+          showModalBottomSheet( //display a modal bottom sheet
             context: context,
             isScrollControlled: true,
+            //singleChildScrollView makes sure the keyboard wont hide the input
             builder: (context) => SingleChildScrollView(
-              child: GestureDetector(
+              child: GestureDetector( //allowing interaction with content
                 child: Padding(
                   padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -320,8 +342,8 @@ class _HomePageState extends State<HomePage> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0),
+                        topLeft: Radius.circular(addButtonPad),
+                        topRight: Radius.circular(addButtonPad),
                       ),
                     ),
                     child: AddJobScreen(addJobCallback:UpdateAPiCallback),
@@ -332,7 +354,7 @@ class _HomePageState extends State<HomePage> {
           );
         },
         child: Icon(Icons.add),
-        backgroundColor: Color(0xFF126180),
+        backgroundColor: buttonColor,
       ):null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

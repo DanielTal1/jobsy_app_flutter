@@ -13,33 +13,41 @@ class PieChartPage extends StatefulWidget {
 }
 
 class _PieChartPageState extends State<PieChartPage> {
+  final fontTouched=20.0;
+  final fontNotTouched=16.0;
+  final radiusIsTouched=110.0;
+  final radiusNotTouched=100.0;
+  final widgetTouched=60.0;
+  final widgetNotTouched=50.0;
+  final smallBorder=2.0;
+  final bigPadding=30.0;
+  final defaultFont=25.0;
+  final badgePosition=0.98;
+  final pieCenterSpaceRadius=40.0;
+  final pieSectionsSpace=0.0;
+
+
+
   int touchedIndex = -1;
 
   List<PieChartSectionData> getSections() {
+    //gets the data as a list of StageData object(with count,stage and icon)
     final JobProvider = Provider.of<JobData>(context, listen: false);
     List<Job> allJobs = [...JobProvider.jobs, ...JobProvider.archiveJobs];
     List<StageData> chartData = StageData.prepareChartData(allJobs);
-
-    int totalCount = 0;
-    for (final stageData in chartData) {
-      totalCount += stageData.count;
-    }
-
+    int totalCount = allJobs.length;
     return List.generate(chartData.length, (i) {
       final stageData = chartData[i];
       final bool isTouched = i == touchedIndex;
-      final double fontSize = isTouched ? 20.0 : 16.0;
-      final double radius = isTouched ? 110.0 : 100.0;
-      final double widgetSize = isTouched ? 60.0 : 50.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-
+      final double fontSize = isTouched ? fontTouched : fontNotTouched;
+      final double radius = isTouched ? radiusIsTouched : radiusNotTouched;
+      final double widgetSize = isTouched ? widgetTouched : widgetNotTouched;
+      final shadows = [Shadow(color: Colors.black, blurRadius: smallBorder)];
       int count = stageData.count;
       if (count > 0) {
         double percentage = count / totalCount;
         double value = percentage * 100;
-
         Color sectionColor = Colors.primaries[i % Colors.primaries.length];
-
         return PieChartSectionData(
           color: sectionColor,
           value: value,
@@ -48,7 +56,7 @@ class _PieChartPageState extends State<PieChartPage> {
           titleStyle: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.bold,
-            color: const Color(0xffffffff),
+            color: Colors.white,
             shadows: shadows,
           ),
           badgeWidget: Container(
@@ -56,7 +64,7 @@ class _PieChartPageState extends State<PieChartPage> {
             height: widgetSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: sectionColor, width: 2),
+              border: Border.all(color: sectionColor, width: smallBorder),
             ),
             child: ClipOval(
               child: Image.asset(
@@ -65,7 +73,7 @@ class _PieChartPageState extends State<PieChartPage> {
               ),
             ),
           ),
-          badgePositionPercentageOffset: 0.98,
+          badgePositionPercentageOffset: badgePosition,
         );
       }
 
@@ -82,10 +90,10 @@ class _PieChartPageState extends State<PieChartPage> {
     return Center(
       child:Column(children: [
         Padding(
-          padding: EdgeInsets.only(top: 30), // Adjust the top padding as needed
+          padding: EdgeInsets.only(top: bigPadding),
           child: Text(
             "The Jobs Stages",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(fontSize: defaultFont),
           ),
         ),
         AspectRatio(
@@ -93,8 +101,8 @@ class _PieChartPageState extends State<PieChartPage> {
         child: PieChart(
           PieChartData(
             sections: getSections(),
-            centerSpaceRadius: 40,
-            sectionsSpace: 0,
+            centerSpaceRadius: pieCenterSpaceRadius,
+            sectionsSpace: pieSectionsSpace,
             pieTouchData: PieTouchData(
               touchCallback: (FlTouchEvent event, PieTouchResponse? response) {
                 setState(() {

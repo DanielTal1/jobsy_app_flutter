@@ -9,6 +9,8 @@ import 'package:confetti/confetti.dart';
 
 
 class PopupWidget {
+
+  //gets random tip for the new Stage from interviewTips
   static String chooseRandomTip(String stage) {
     List<String>? tips = interviewTips[stage];
     if (tips != null && tips.isNotEmpty) {
@@ -20,10 +22,23 @@ class PopupWidget {
     }
   }
 
-  static Future<void> openPopup(BuildContext context, String selected_stage, Job currentJob,bool isArchive,  Function updateInterviewCallBack) async {
+  //open a popup dialog
+  static Future<void> openPopup(BuildContext context, String selected_stage, Job currentJob,bool isArchive, Function updateInterviewCallBack) async {
+    final confettiDuration=5;
+    final iconSize=30.0;
+    final maxYear=2100;
+    final smallPad=8.0;
+    final font=15.0;
+    final normalPad=16.0;
+    final confettiPosition=0.0;
+    final  confettiBlastDirection= -pi / 2;
+    final  confettiEmissionFrequency= 0.05;
+    final  confettiNumberOfParticles= 20;
+    final  confettiMaxBlastForce= 5.0;
+    final  confettiMinBlastForce= 2.0;
+    final  confettiGravity= 0.1;
     DateTime selectedDate = DateTime.now();
-    print(selected_stage);
-    ConfettiController _confettiController = ConfettiController(duration: const Duration(seconds: 5));
+    ConfettiController _confettiController = ConfettiController(duration: Duration(seconds: confettiDuration));
     final jobData = Provider.of<JobData>(context, listen: false);
     await showDialog<void>(
       context: context,
@@ -44,21 +59,21 @@ class PopupWidget {
                     children: <Widget>[
                       Image.asset(
                         'images/tips.png',
-                        width: 30,
-                        height: 30,
+                        width: iconSize,
+                        height: iconSize,
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(width: smallPad),
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(smallPad),
                           ),
-                          padding: const EdgeInsets.all(8),
-                          margin: const EdgeInsets.only(bottom: 16),
+                          padding:  EdgeInsets.all(smallPad),
+                          margin:  EdgeInsets.only(bottom: normalPad),
                           child: Text(
                             chooseRandomTip(selected_stage),
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: font),
                           ),
                         ),
                       ),
@@ -69,20 +84,20 @@ class PopupWidget {
                     children: <Widget>[
                       Image.asset(
                         'images/calender.png',
-                        width: 30,
-                        height: 30,
+                        width: iconSize,
+                        height: iconSize,
                       ),
 
-                      SizedBox(width: 8),
+                      SizedBox(width: smallPad),
                       ElevatedButton(
                         onPressed: () async {
+                          //opens the calendar
                           final DateTime? pickedDate = await showDatePicker(
                             context: context,
                             initialDate: selectedDate,
                             firstDate: DateTime.now(),
-                            lastDate: DateTime(2100),
+                            lastDate: DateTime(maxYear),
                           );
-
                           if (pickedDate != null && pickedDate != selectedDate) {
                             setState(() {
                               selectedDate = pickedDate;
@@ -95,19 +110,19 @@ class PopupWidget {
                   ),
                 ],
               ), Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
+                    top: confettiPosition,
+                    left: confettiPosition,
+                    right: confettiPosition,
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: ConfettiWidget(
                         confettiController: _confettiController,
-                        blastDirection: -pi / 2,
-                        emissionFrequency: 0.05,
-                        numberOfParticles: 20,
-                        maxBlastForce: 5,
-                        minBlastForce: 2,
-                        gravity: 0.1,
+                        blastDirection: confettiBlastDirection,
+                        emissionFrequency: confettiEmissionFrequency,
+                        numberOfParticles: confettiNumberOfParticles,
+                        maxBlastForce: confettiMaxBlastForce,
+                        minBlastForce: confettiMinBlastForce,
+                        gravity: confettiGravity,
                       ),
                     ),
                   ),
@@ -117,7 +132,7 @@ class PopupWidget {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.close),
-              onPressed: () {
+              onPressed: () {//when closing the popup
                 _confettiController.stop();
                 jobData.updateStageLocally(selected_stage, currentJob.id,isArchive?jobData.archiveJobs:jobData.jobs,selectedDate);
                 updateInterviewCallBack(selectedDate);

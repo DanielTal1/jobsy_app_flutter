@@ -20,6 +20,10 @@ class CommentList extends StatefulWidget {
 class _CommentListState extends State<CommentList> {
   CommentData? commentProvider;
   List<Comment> comments = [];
+  final fontSize=20.0;
+  final normalPad=20.0;
+  final commentListHeight=300.0;
+  final smallPad=10.0;
 
   @override
   void initState() {
@@ -45,7 +49,7 @@ class _CommentListState extends State<CommentList> {
           children: [
             Text(
               '   Comments (${comments.length})',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
             ),
             Align(
               alignment: Alignment.centerRight,
@@ -64,8 +68,8 @@ class _CommentListState extends State<CommentList> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20.0),
-                                topRight: Radius.circular(20.0),
+                                topLeft: Radius.circular(normalPad),
+                                topRight: Radius.circular(normalPad),
                               ),
                             ),
                             child: AddCommentScreen(
@@ -81,12 +85,12 @@ class _CommentListState extends State<CommentList> {
             ),
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: smallPad),
         if (comments.isNotEmpty)
           Stack(
             children: [
               Container(
-                height: 300,
+                height: commentListHeight,
                 child: ListView.builder(
                   itemCount: comments.length,
                   itemBuilder: (context, index) {

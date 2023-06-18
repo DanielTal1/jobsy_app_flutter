@@ -16,18 +16,5 @@ class Comment{
   }
 
 
-  Map<String, dynamic> toJson() {
-    return {
-      'company': company,
-      'role': role,
-      'text': text,
-      'username': username,
-    };
-  }
-
-
-
-
-
   Comment({required this.company, required this.role, required this.text, required this.username});
 }

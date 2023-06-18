@@ -20,20 +20,5 @@ class Recommendation{
   }
 
 
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'company': company,
-      'role': role,
-      'location': location,
-      'url': url,
-      'company_logo': company_logo,
-    };
-  }
-
-
-
-
-
   Recommendation({required this.id,required this.company, required this.role, required this.location, required this.url,required this.company_logo});
 }
