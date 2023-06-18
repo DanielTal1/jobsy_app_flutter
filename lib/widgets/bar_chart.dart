@@ -85,11 +85,12 @@ class _BarChartByMonth extends State<BarChartByMonth> {
   final blurRadius=12.0;
   final opacity=0.2;//transparency
   int touchedGroupIndex = -1;
+  final maxCountDefault=10.0;
 
   @override
   Widget build(BuildContext context) {
     int maxCount = jobCountMap.fold(0, (max, data) => math.max(max, data.count));
-    double maxY = maxCount < 10 ? 10 : ( maxCount + 5);
+    double maxY = maxCount < maxCountDefault ? maxCountDefault : ((maxCount ~/ 5) + 1) * 5;
     return Column(children:[
       Padding(
         padding: EdgeInsets.only(top: bigPad,bottom: bigPad),

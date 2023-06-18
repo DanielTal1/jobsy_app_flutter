@@ -28,16 +28,31 @@ class _RecommendListState extends State<RecommendList> {
       );
     }
 
-    return recommendProvider.isLoading
-        ? Center(child: CircularProgressIndicator())
-        : ListView.builder(
-      itemBuilder: (context, index) {
-        return RecommendTile(
-          currentRecommend: recommendationsList[index],
-        );
-      },
-      itemCount: recommendationsList.length,
-    );
+    if(recommendProvider.isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    else if(recommendationsList.isEmpty) {
+      return Center(
+        child: Text(
+          'Currently there are no recommendations.\nPlease add some jobs and try again.',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+        ),
+      );
+    } else {
+
+      return ListView.builder(
+        itemBuilder: (context, index) {
+          return RecommendTile(
+            currentRecommend: recommendationsList[index],
+          );
+        },
+        itemCount: recommendationsList.length,
+      );
+
+
+    }
+
   }
 
 }

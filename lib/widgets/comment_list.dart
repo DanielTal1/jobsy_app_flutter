@@ -5,9 +5,6 @@ import 'package:provider/provider.dart';
 import '../models/comment.dart';
 import 'comment_tile.dart';
 
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 class CommentList extends StatefulWidget {
   final String currentCompany;
 
@@ -18,91 +15,103 @@ class CommentList extends StatefulWidget {
 }
 
 class _CommentListState extends State<CommentList> {
-  CommentData? commentProvider;
   List<Comment> comments = [];
   final fontSize=20.0;
   final normalPad=20.0;
-  final commentListHeight=300.0;
   final smallPad=10.0;
+  final commentListHeight=300.0;
 
   @override
   void initState() {
     super.initState();
-    commentProvider = Provider.of<CommentData>(context, listen: false);
-    comments = commentProvider!.comments;
-    commentProvider!.fetchComments(widget.currentCompany);
+    fetchComments();
+  }
+
+  void fetchComments() async {
+    final commentProvider = Provider.of<CommentData>(context, listen: false);
+    await commentProvider.fetchComments(widget.currentCompany);
+    if(mounted){
+      setState(() {
+      comments = commentProvider.comments;
+      });
+    }
   }
 
   @override
   void dispose() {
-    commentProvider?.disposeComments();
+    comments.clear();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Consumer<CommentData>(
+      builder: (context, commentProvider, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '   Comments (${comments.length})',
-              style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => SingleChildScrollView(
-                      child: GestureDetector(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(normalPad),
-                                topRight: Radius.circular(normalPad),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '   Comments (${comments.length})',
+                  style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => SingleChildScrollView(
+                          child: GestureDetector(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom,
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(normalPad),
+                                    topRight: Radius.circular(normalPad),
+                                  ),
+                                ),
+                                child: AddCommentScreen(
+                                  currentCompany: widget.currentCompany,
+                                ),
                               ),
                             ),
-                            child: AddCommentScreen(
-                                currentCompany: widget.currentCompany),
                           ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-                child: Text('Add Comment'),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: smallPad),
-        if (comments.isNotEmpty)
-          Stack(
-            children: [
-              Container(
-                height: commentListHeight,
-                child: ListView.builder(
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    return CommentTile(currentComment: comments[index]);
-                  },
+                      );
+                    },
+                    child: Text('Add Comment'),
+                  ),
                 ),
+              ],
+            ),
+            SizedBox(height: smallPad),
+            if (comments.isNotEmpty)
+              Stack(
+                children: [
+                  Container(
+                    height: commentListHeight,
+                    child: ListView.builder(
+                      itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        return CommentTile(currentComment: comments[index]);
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        if (comments.isEmpty)
-          Center(child: Text('No comments available')),
-      ],
+            if (comments.isEmpty)
+              Center(child: Text('No comments available')),
+          ],
+        );
+      },
     );
   }
 }

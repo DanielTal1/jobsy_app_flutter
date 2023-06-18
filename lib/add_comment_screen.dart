@@ -99,9 +99,9 @@ class _AddCommentScreen extends State<AddCommentScreen> {
                     child: MaterialButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()==true) {
-                          Navigator.pop(context);
                           await commentProvider.addCommentLocally(widget.currentCompany,addedText,addedRole);
                           commentProvider.addComment(widget.currentCompany,addedText,addedRole);
+                          Navigator.pop(context);
                         }
                       },
                       minWidth: buttonWidth,
