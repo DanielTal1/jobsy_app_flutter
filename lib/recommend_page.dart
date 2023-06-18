@@ -14,7 +14,6 @@ class RecommendPage extends StatefulWidget {
 
 
 class _RecommendPageState extends State<RecommendPage> {
-  final backgroundColor=Color(0xFFF9F5EB);
   final appbarColor= Color(0xFF126180);
 
   @override
@@ -26,7 +25,7 @@ class _RecommendPageState extends State<RecommendPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(resizeToAvoidBottomInset : false,
-        backgroundColor: backgroundColor,
+        backgroundColor: Colors.white,
         appBar: AppBar(
             title:Text('Recommendations'),
             backgroundColor:appbarColor,

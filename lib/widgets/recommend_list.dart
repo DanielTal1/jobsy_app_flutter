@@ -30,15 +30,6 @@ class _RecommendListState extends State<RecommendList> {
 
     if(recommendProvider.isLoading) {
       return Center(child: CircularProgressIndicator());
-    }
-    else if(recommendationsList.isEmpty) {
-      return Center(
-        child: Text(
-          'Currently there are no recommendations.\nPlease add some jobs and try again.',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
-        ),
-      );
     } else {
 
       return ListView.builder(
