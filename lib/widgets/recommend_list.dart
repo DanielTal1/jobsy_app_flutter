@@ -18,7 +18,10 @@ class _RecommendListState extends State<RecommendList> {
     final recommendProvider = Provider.of<RecommendationData>(context);
     final recommendationsList = recommendProvider.recommendations;
 
-    if (recommendationsList.isEmpty) {
+    if(recommendProvider.isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    else if(recommendationsList.isEmpty) {
       return Center(
         child: Text(
           'Currently there are no recommendations.\nPlease add some jobs and try again.',
@@ -26,10 +29,6 @@ class _RecommendListState extends State<RecommendList> {
           style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
         ),
       );
-    }
-
-    if(recommendProvider.isLoading) {
-      return Center(child: CircularProgressIndicator());
     } else {
 
       return ListView.builder(
