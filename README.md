@@ -1,6 +1,7 @@
 # jobsy_app_flutter
 
 Jobsy Flutter App that showcases the saved jobs.
+
 consists of:
 * registration and log in
 * each job is shown with the company icon and data about the job
